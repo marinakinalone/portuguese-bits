@@ -1,50 +1,48 @@
-# Welcome to your Expo app 👋
+# portuguese-bits-server
 
-This is an [Expo](https://expo.dev) project created with [`create-expo-app`](https://www.npmjs.com/package/create-expo-app).
+Portuguese Bits is an app to practice Portuguese vocabulary (or English if you are a Portuguese speaker). Written in English and Portuguese, it uses the flash card method to help memorizing words.
 
-## Get started
 
-1. Install dependencies
+## Table of Contents
 
-   ```bash
-   npm install
-   ```
+- [portuguese-bits-server](#portuguese-bits-server)
+  - [Table of Contents](#table-of-contents)
+  - [Mockups](#mockups)
+  - [Deployments](#deployments)
+  - [Built with](#built-with)
+  - [Installation](#installation)
+  - [Team](#team)
+  - [License](#license)
 
-2. Start the app
+## Mockups
 
-   ```bash
-    npx expo start
-   ```
+![mockups for Portuguese Bits](./assets/mockups.png)
 
-In the output, you'll find options to open the app in a
+Flower illustrations by [Flower Club](https://www.pinterest.com/flowerclubco/)
 
-- [development build](https://docs.expo.dev/develop/development-builds/introduction/)
-- [Android emulator](https://docs.expo.dev/workflow/android-studio-emulator/)
-- [iOS simulator](https://docs.expo.dev/workflow/ios-simulator/)
-- [Expo Go](https://expo.dev/go), a limited sandbox for trying out app development with Expo
+## Deployments
 
-You can start developing by editing the files inside the **app** directory. This project uses [file-based routing](https://docs.expo.dev/router/introduction).
+[coming soon](https://...)
 
-## Get a fresh project
+## Built with
 
-When you're ready, run:
+- Bun
+- React Native
+- TypeScript
+
+## Installation
 
 ```bash
-npm run reset-project
+nvm use
+bun install
 ```
 
-This command will move the starter code to the **app-example** directory and create a blank **app** directory where you can start developing.
+## Team
 
-## Learn more
+| [![Marina Kinalone Simonnet](https://avatars.githubusercontent.com/u/63544936?v=3&s=144)](https://github.com/marinakinalone) |
+| ---------------------------------------------------------------------------------------------------------------------------- |
+| [Marina Kinalone Simonnet](https://github.com/marinakinalone)                                                                |
 
-To learn more about developing your project with Expo, look at the following resources:
+## [License](https://github.com/marinakinalone/portuguese-bits/blob/main/LICENSE.txt)
 
-- [Expo documentation](https://docs.expo.dev/): Learn fundamentals, or go into advanced topics with our [guides](https://docs.expo.dev/guides).
-- [Learn Expo tutorial](https://docs.expo.dev/tutorial/introduction/): Follow a step-by-step tutorial where you'll create a project that runs on Android, iOS, and the web.
-
-## Join the community
-
-Join our community of developers creating universal apps.
-
-- [Expo on GitHub](https://github.com/expo/expo): View our open source platform and contribute.
-- [Discord community](https://chat.expo.dev): Chat with Expo users and ask questions.
+MIT © [Marina Kinalone Simonnet](https://github.com/marinakinalone)
