@@ -3,8 +3,7 @@ import { Link } from 'expo-router';
 import { View, Text, StyleSheet } from 'react-native';
 
 const QuizzSuccessScreen: React.FC = ({}) => {
-
-    // navigates automatically to the HomeScreen after 5 seconds
+  // navigates automatically to the HomeScreen after 5 seconds
   return (
     <View style={styles.container}>
       <Text>QuizzSuccess Screen</Text>

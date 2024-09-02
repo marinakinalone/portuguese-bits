@@ -1,5 +1,5 @@
-import React, {useEffect } from 'react';
-import { useNavigation} from 'expo-router';
+import React, { useEffect } from 'react';
+import { useNavigation } from 'expo-router';
 import QuizzSuccessScreen from '@/screens/QuizzSuccessScreen';
 
 const Success: React.FC = ({}) => {
@@ -8,8 +8,8 @@ const Success: React.FC = ({}) => {
   useEffect(() => {
     navigation.setOptions({ headerShown: false });
   }, [navigation]);
- 
-  return <QuizzSuccessScreen />
+
+  return <QuizzSuccessScreen />;
 };
 
 export default Success;

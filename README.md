@@ -2,7 +2,6 @@
 
 Portuguese Bits is an app to practice Portuguese vocabulary (or English if you are a Portuguese speaker). Written in English and Portuguese, it uses the flash card method to help memorizing words.
 
-
 ## Table of Contents
 
 - [portuguese-bits-server](#portuguese-bits-server)

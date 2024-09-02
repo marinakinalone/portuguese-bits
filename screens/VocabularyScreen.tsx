@@ -3,7 +3,6 @@ import { Link } from 'expo-router';
 import { View, Text, StyleSheet } from 'react-native';
 
 const VocabularyScreen: React.FC = ({}) => {
-
   return (
     <View style={styles.container}>
       <Text>Vocabulary Screen</Text>

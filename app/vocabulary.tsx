@@ -1,5 +1,5 @@
-import React, {useEffect } from 'react';
-import { useNavigation} from 'expo-router';
+import React, { useEffect } from 'react';
+import { useNavigation } from 'expo-router';
 import VocabularyScreen from '@/screens/VocabularyScreen';
 
 const Vocabulary: React.FC = ({}) => {
@@ -8,8 +8,8 @@ const Vocabulary: React.FC = ({}) => {
   useEffect(() => {
     navigation.setOptions({ headerShown: false });
   }, [navigation]);
- 
-  return <VocabularyScreen />
+
+  return <VocabularyScreen />;
 };
 
 export default Vocabulary;

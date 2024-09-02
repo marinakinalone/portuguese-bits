@@ -1,9 +1,8 @@
 import React from 'react';
-import { Link} from 'expo-router';
+import { Link } from 'expo-router';
 import { View, Text, StyleSheet } from 'react-native';
 
 const QuizzScreen: React.FC = ({}) => {
-
   return (
     <View style={styles.container}>
       <Text>Quizz Screen</Text>

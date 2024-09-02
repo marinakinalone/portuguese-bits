@@ -9,7 +9,9 @@
     "ios": "expo start --ios",
     "web": "expo start --web",
     "test": "jest --watchAll",
-    "lint": "expo lint"
+    "lint": "eslint .",
+    "format": "prettier --write .",
+    "prettier:staged": "prettier --write $(git diff --cached --name-only --diff-filter=ACM \"*.ts\" \"*.tsx\" | sed 's| |\\\\ |g')"
   },
   "jest": {
     "preset": "jest-expo"
@@ -17,6 +19,13 @@
   "dependencies": {
     "@expo/vector-icons": "^14.0.2",
     "@react-navigation/native": "^6.0.2",
+    "@typescript-eslint/eslint-plugin": "",
+    "@typescript-eslint/parser": "",
+    "eslint": "",
+    "eslint-plugin-import": "",
+    "eslint-plugin-prettier": "",
+    "eslint-plugin-react": "",
+    "eslint-plugin-react-hooks": "",
     "expo": "~51.0.21",
     "expo-constants": "~16.0.2",
     "expo-font": "~12.0.9",
@@ -37,6 +46,9 @@
   },
   "devDependencies": {
     "@babel/core": "^7.20.0",
+    "@eslint/compat": "^1.1.1",
+    "@eslint/eslintrc": "^3.1.0",
+    "@eslint/js": "^9.9.1",
     "@types/jest": "^29.5.12",
     "@types/react": "~18.2.45",
     "@types/react-test-renderer": "^18.0.7",
