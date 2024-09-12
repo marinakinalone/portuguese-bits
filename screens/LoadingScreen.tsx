@@ -43,13 +43,12 @@ const LoadingScreen: React.FC = () => {
     const animate = () => {
       animation.setValue(0);
       Animated.timing(animation, {
-        toValue: imageSources.length - 1,
-        duration: 4000, // Adjust the duration as needed
+        toValue: imageSources.length,
+        duration: 6000,
         useNativeDriver: false,
       }).start(() => animate());
     };
 
-    // Start the animation
     animate();
 
     // Listen to the animation value updates
