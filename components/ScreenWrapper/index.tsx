@@ -1,6 +1,6 @@
 import { useNavigation } from '@react-navigation/native';
 import React, { ReactNode, useEffect } from 'react';
-import { Dimensions, Image, StyleSheet, View } from 'react-native';
+import { Image, StyleSheet, View } from 'react-native';
 import QuizzScreenBackground_0 from '../../assets/backgrounds/question/flowers_0.jpg';
 import QuizzScreenBackground_1 from '../../assets/backgrounds/question/flowers_1.jpg';
 import QuizzScreenBackground_2 from '../../assets/backgrounds/question/flowers_2.jpg';
@@ -18,6 +18,11 @@ import SuccessScreenBackground_2 from '../../assets/backgrounds/success/success_
 import SuccessScreenBackground_3 from '../../assets/backgrounds/success/success_3.jpg';
 import VocabularyScreenBackground from '../../assets/backgrounds/vocabulary.jpg';
 import { SCREENS } from '@/constants/screens';
+import {
+  bottomValue,
+  windowHeight,
+  windowWidth,
+} from '@/utils/windowDimensions';
 
 interface ScreenWrapperProps {
   screen: string;
@@ -68,14 +73,6 @@ const mapScreenToBackground = (
   return screenBackgrounds[screenName] || StartScreenBackground;
 };
 
-// TODO move to own file
-const windowWidth = Dimensions.get('window').width;
-const windowHeight = Dimensions.get('window').height;
-const bottomValue =
-  (windowWidth > 500 && windowHeight < 1000) || windowWidth < 500
-    ? 0
-    : undefined;
-
 const ScreenWrapper: React.FC<ScreenWrapperProps> = ({
   screen,
   questionNumber,
@@ -98,6 +95,7 @@ const ScreenWrapper: React.FC<ScreenWrapperProps> = ({
   );
 };
 
+// TODO consider sharing with loading screen
 const styles = StyleSheet.create({
   container: {
     flex: 1,
