@@ -1,8 +1,8 @@
-import React from 'react';
 import { Link } from 'expo-router';
-import { View, Text, StyleSheet } from 'react-native';
+import React from 'react';
+import { StyleSheet, Text, View } from 'react-native';
 
-const QuizzSuccessScreen: React.FC = ({}) => {
+const QuizzSuccessScreen: React.FC = () => {
   // navigates automatically to the HomeScreen after 5 seconds
   return (
     <View style={styles.container}>

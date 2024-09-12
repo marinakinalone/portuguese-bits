@@ -1,8 +1,8 @@
-import React from 'react';
 import { Link } from 'expo-router';
-import { View, Text, StyleSheet } from 'react-native';
+import React from 'react';
+import { StyleSheet, Text, View } from 'react-native';
 
-const WordEditScreen: React.FC = ({}) => {
+const WordEditScreen: React.FC = () => {
   // should navigate to vocabulary screen if saved or pressed back
   return (
     <View style={styles.container}>

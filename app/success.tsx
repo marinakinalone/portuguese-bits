@@ -1,0 +1,14 @@
+import React from 'react';
+import ScreenWrapper from '@/components/ScreenWrapper';
+import { SCREENS } from '@/constants/screens';
+import QuizzSuccessScreen from '@/screens/QuizzSuccessScreen';
+
+const Success: React.FC = () => {
+  return (
+    <ScreenWrapper screen={SCREENS.SUCCESS}>
+      <QuizzSuccessScreen />
+    </ScreenWrapper>
+  );
+};
+
+export default Success;

@@ -1,13 +1,18 @@
-import React from 'react';
 import { Link } from 'expo-router';
-import { View, Text, StyleSheet } from 'react-native';
+import React from 'react';
+import { Button, StyleSheet, Text, View } from 'react-native';
 
-const QuizzScreen: React.FC = ({}) => {
+interface IQuizzScreenProps {
+  handleNextQuestion: () => void;
+}
+
+const QuizzScreen: React.FC<IQuizzScreenProps> = ({ handleNextQuestion }) => {
   return (
     <View style={styles.container}>
       <Text>Quizz Screen</Text>
       <Link href={{ pathname: '/' }}>Go to Home</Link>
-      <Link href={{ pathname: 'quizz/success' }}>Go to success screen</Link>
+      <Link href={{ pathname: 'success' }}>Go to success screen</Link>
+      <Button title="Next question" onPress={handleNextQuestion} />
     </View>
   );
 };
