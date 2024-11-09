@@ -1,6 +1,6 @@
 import React from 'react';
 import ScreenWrapper from '@/components/ScreenWrapper';
-import { SCREENS } from '@/constants/screens';
+import { SCREENS } from '@/constants';
 import QuizzSuccessScreen from '@/screens/QuizzSuccessScreen';
 
 const Success: React.FC = () => {

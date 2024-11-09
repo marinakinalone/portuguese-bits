@@ -1,4 +1,4 @@
-import { SCREENS } from '@/constants/screens';
+import { QuizzVariant, SCREENS } from '@/constants';
 
 declare global {
   namespace ReactNavigation {
@@ -7,7 +7,8 @@ declare global {
       [SCREENS.SUCCESS]: undefined;
       [SCREENS.NOT_FOUND]: undefined;
       [SCREENS.HOME]: undefined;
-      [SCREENS.QUIZZ]: { questionNumber: number };
+      [SCREENS.VOCABULARY]: undefined;
+      [SCREENS.QUIZZ]: { questionNumber: number; variant: QuizzVariant };
     }
   }
 }

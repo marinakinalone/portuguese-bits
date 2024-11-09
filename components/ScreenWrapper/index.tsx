@@ -17,7 +17,7 @@ import SuccessScreenBackground_1 from '../../assets/backgrounds/success/success_
 import SuccessScreenBackground_2 from '../../assets/backgrounds/success/success_2.jpg';
 import SuccessScreenBackground_3 from '../../assets/backgrounds/success/success_3.jpg';
 import VocabularyScreenBackground from '../../assets/backgrounds/vocabulary.jpg';
-import { SCREENS } from '@/constants/screens';
+import { SCREENS } from '@/constants';
 import {
   bottomValue,
   windowHeight,

@@ -1,5 +1,4 @@
-import { Lato_400Regular } from '@expo-google-fonts/lato';
-import { Uchen_400Regular } from '@expo-google-fonts/uchen';
+/* eslint-disable @typescript-eslint/no-require-imports */
 import {
   DarkTheme,
   DefaultTheme,
@@ -10,8 +9,7 @@ import { Stack } from 'expo-router';
 import * as SplashScreen from 'expo-splash-screen';
 import { useEffect } from 'react';
 import 'react-native-reanimated'; // TODO use or not?
-import { SCREENS } from '@/constants/screens';
-import {} from '@/constants/screens';
+import { SCREENS } from '@/constants';
 import { useColorScheme } from '@/hooks/useColorScheme';
 import { LoadingProvider } from '@/providers/Loading';
 import LoadingScreen from '@/screens/LoadingScreen';
@@ -24,21 +22,22 @@ const { HOME, QUIZZ, NOT_FOUND, SUCCESS, VOCABULARY } = SCREENS;
 SplashScreen.preventAutoHideAsync();
 
 export default function RootLayout() {
+  // TODO fix or remove
   const colorScheme = useColorScheme();
 
-  const [fontsLoaded] = useFonts({
-    Lato_400Regular,
-    Uchen_400Regular,
+  const [loaded] = useFonts({
+    UchenRegular: require('../assets/fonts/UchenRegular.ttf'),
+    LatoRegular: require('../assets/fonts/LatoRegular.ttf'),
   });
 
   useEffect(() => {
-    if (fontsLoaded) {
+    if (loaded) {
       console.log('fonts loaded');
       SplashScreen.hideAsync();
     }
-  }, [fontsLoaded]);
+  }, [loaded]);
 
-  if (!fontsLoaded) {
+  if (!loaded) {
     console.log('loading fonts');
     return <LoadingScreen />;
   }
@@ -46,14 +45,13 @@ export default function RootLayout() {
   return (
     <LoadingProvider>
       <ThemeProvider value={colorScheme === 'dark' ? DarkTheme : DefaultTheme}>
-        {/* <Stack>
+        <Stack>
           <Stack.Screen name={HOME} options={{ title: 'home' }} />
           <Stack.Screen name={QUIZZ} initialParams={{ questionNumber: 0 }} />
           <Stack.Screen name={SUCCESS} />
           <Stack.Screen name={VOCABULARY} />
           <Stack.Screen name={NOT_FOUND} />
-        </Stack> */}
-        <LoadingScreen />
+        </Stack>
       </ThemeProvider>
     </LoadingProvider>
   );
