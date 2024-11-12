@@ -90,7 +90,7 @@ const ScreenWrapper: React.FC<ScreenWrapperProps> = ({
         source={mapScreenToBackground(screen, questionNumber)}
         style={styles.background}
       />
-      <View style={styles.screenContent}>{children}</View>
+      {children}
     </View>
   );
 };
@@ -103,7 +103,6 @@ const styles = StyleSheet.create({
     height: windowHeight,
     alignSelf: 'center',
     alignItems: 'center',
-    justifyContent: 'center',
   },
   background: {
     position: 'absolute',
@@ -112,11 +111,6 @@ const styles = StyleSheet.create({
     maxWidth: 500,
     maxHeight: windowHeight,
     flex: 1,
-  },
-  screenContent: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
   },
 });
 

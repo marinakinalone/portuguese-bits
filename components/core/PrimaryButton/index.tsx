@@ -7,13 +7,15 @@ type PrimaryButtonStyle =
   (typeof PRIMARY_BUTTON_STYLE)[keyof typeof PRIMARY_BUTTON_STYLE];
 
 interface IPrimaryButton {
-  style: PrimaryButtonStyle;
+  style?: PrimaryButtonStyle;
   handlePress: (variant?: QuizzVariant) => void;
+  attenuated?: boolean;
   children: React.ReactNode;
 }
 
 const PrimaryButton = ({
   style = PRIMARY_BUTTON_STYLE.DEFAULT,
+  attenuated = false,
   handlePress,
   children,
 }: IPrimaryButton) => {
@@ -21,7 +23,9 @@ const PrimaryButton = ({
     <TouchableOpacity
       onPress={() => handlePress()}
       style={[styles.button, styles[style]]}>
-      <Text style={styles.label}>{children}</Text>
+      <Text style={[styles.label, attenuated && styles.attenuated]}>
+        {children}
+      </Text>
     </TouchableOpacity>
   );
 };
@@ -33,25 +37,27 @@ const styles = StyleSheet.create({
     marginVertical: 4,
     alignItems: 'center',
     borderWidth: 1,
-    borderColor: theme.colors.midnight,
     width: 144,
     maxWidth: 144,
   },
   label: {
-    color: theme.colors.midnight,
-    ...theme.fonts.primary.small,
+    ...theme.fonts.primary,
+    ...theme.fonts.primary.mediumSmall,
   },
   default: {
-    backgroundColor: theme.palette.primary.background,
-    color: theme.palette.primary.text,
+    ...theme.palette.primary,
+  },
+  navigation: {
+    ...theme.palette.primary,
+  },
+  attenuated: {
+    textTransform: 'lowercase',
   },
   accent: {
-    backgroundColor: theme.palette.primaryAcc.background,
-    color: theme.palette.primaryAcc.text,
+    ...theme.palette.primaryAcc,
   },
   warning: {
-    backgroundColor: theme.palette.warning.background,
-    color: theme.palette.warning.text,
+    ...theme.palette.warning,
   },
 });
 

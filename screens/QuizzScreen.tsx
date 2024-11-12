@@ -1,28 +1,37 @@
-import { Link } from 'expo-router';
 import React from 'react';
-import { Button, StyleSheet, Text, View } from 'react-native';
+import CorrectAnswerFeedback from '@/components/AnswerFeedback/Correct';
+import WrongAnswerFeedback from '@/components/AnswerFeedback/Wrong';
+import ProgressCircles from '@/components/ProgressCircles';
+import WordToTranslate from '@/components/WordToTranslate';
+import MainView from '@/components/core/MainView';
+import PrimaryButton from '@/components/core/PrimaryButton';
+import { PRIMARY_BUTTON_STYLE, VIEW_STYLE } from '@/constants';
+import { useQuizzLogic } from '@/providers/QuizzLogic';
 
-interface IQuizzScreenProps {
-  handleNextQuestion: () => void;
-}
+const QuizzScreen = () => {
+  const { handleCheckAnswer, isCorrect, questionNumber } = useQuizzLogic();
 
-const QuizzScreen: React.FC<IQuizzScreenProps> = ({ handleNextQuestion }) => {
+  const renderBottomContainer = () => {
+    if (isCorrect === null) {
+      return (
+        <PrimaryButton
+          style={PRIMARY_BUTTON_STYLE.ACCENT}
+          handlePress={handleCheckAnswer}>
+          verify
+        </PrimaryButton>
+      );
+    }
+    return isCorrect ? <CorrectAnswerFeedback /> : <WrongAnswerFeedback />;
+  };
+
   return (
-    <View style={styles.container}>
-      <Text>Quizz Screen</Text>
-      <Link href={{ pathname: '/' }}>Go to Home</Link>
-      <Link href={{ pathname: 'success' }}>Go to success screen</Link>
-      <Button title="Next question" onPress={handleNextQuestion} />
-    </View>
+    <MainView
+      style={VIEW_STYLE.DEFAULT}
+      TopContainer={<ProgressCircles questionNumber={questionNumber} />}
+      CenterContainer={<WordToTranslate />}
+      BottomContainer={renderBottomContainer()}
+    />
   );
 };
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-});
 
 export default QuizzScreen;

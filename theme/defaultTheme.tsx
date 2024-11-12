@@ -5,106 +5,97 @@ const { UCHEN_REGULAR, LATO_REGULAR } = FONTS;
 
 export const colors = {
   sunshine: '#E5B207',
+  chocolate: '#9B5030',
   midnight: '#1E1E1E',
   linen: '#F4E7D4',
   coral: '#FE8D69',
+  pistachio: '#A3D49B',
+  cloud: '#D9D9D9',
 };
 
 export const palette = {
   primaryAcc: {
-    background: colors.sunshine,
-    text: colors.midnight,
+    backgroundColor: colors.sunshine,
+    color: colors.midnight,
+    borderColor: colors.midnight,
   },
   primary: {
-    background: colors.linen,
-    text: colors.midnight,
+    backgroundColor: colors.linen,
+    color: colors.midnight,
+    borderColor: colors.midnight,
   },
   secondary: {
-    background: colors.linen,
-    text: colors.midnight,
+    backgroundColor: colors.linen,
+    color: colors.midnight,
+    borderColor: colors.midnight,
   },
   tertiary: {
-    text: colors.midnight,
+    color: colors.midnight,
   },
   warning: {
-    background: colors.coral,
-    text: colors.midnight,
+    backgroundColor: colors.coral,
+    color: colors.midnight,
+    borderColor: colors.midnight,
+  },
+  input: {
+    default: {
+      backgroundColor: colors.cloud,
+      color: colors.midnight,
+      borderColor: colors.cloud,
+    },
+    focus: {
+      borderColor: colors.midnight,
+    },
+    correct: {
+      backgroundColor: colors.pistachio,
+      borderColor: colors.pistachio,
+    },
+    wrong: {
+      backgroundColor: colors.coral,
+      borderColor: colors.coral,
+    },
   },
 };
 
 export const fonts = {
   primary: {
+    fontFamily: UCHEN_REGULAR,
     extralarge: {
-      fontFamily: UCHEN_REGULAR,
-      fontSize: 24,
+      fontSize: 36,
       textTransform: UPPERCASE,
     },
     large: {
-      fontFamily: UCHEN_REGULAR,
       fontSize: 24,
       textTransform: UPPERCASE,
     },
     mediumLarge: {
-      fontFamily: UCHEN_REGULAR,
       fontSize: 20,
       textTransform: UPPERCASE,
     },
     mediumSmall: {
-      fontFamily: UCHEN_REGULAR,
       fontSize: 16,
       textTransform: UPPERCASE,
     },
     small: {
-      fontFamily: UCHEN_REGULAR,
       fontSize: 14,
     },
   },
   secondary: {
+    fontFamily: LATO_REGULAR,
     medium: {
-      fontFamily: LATO_REGULAR,
       fontSize: 16,
       textTransform: UPPERCASE,
     },
     small: {
-      fontFamily: LATO_REGULAR,
       fontSize: 14,
       textTransform: UPPERCASE,
     },
     extraSmall: {
-      fontFamily: LATO_REGULAR,
       fontSize: 12,
       textTransform: UPPERCASE,
     },
   },
 };
-
-//TODO delete when not needed anymore - add everything in core components
-
-//   secondaryButton: {
-//     backgroundColor: palette.secondary.background,
-//     color: palette.secondary.text,
-//     ...fonts.primary.small,
-//   },
-//   tertiaryButton: {
-//     textDecorationLine: 'underline',
-//     ...fonts.primary.small,
-//   },
-//   headline: {
-//     ...fonts.primary.extralarge,
-//     color: palette.secondary.text,
-//   },
-//   title: {
-//     ...fonts.primary.mediumLarge,
-//     color: palette.secondary.text,
-//   },
-//   feedback: {
-//     ...fonts.secondary.medium,
-//     color: palette.warning.text,
-//   },
-//   body: {
-//     ...fonts.secondary.small,
-//     color: palette.secondary.text,
-//   },
 
 const theme = {
   colors,
