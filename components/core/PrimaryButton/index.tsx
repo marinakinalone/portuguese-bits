@@ -10,6 +10,7 @@ interface IPrimaryButton {
   style?: PrimaryButtonStyle;
   handlePress: (variant?: QuizzVariant) => void;
   attenuated?: boolean;
+  disabled?: boolean;
   children: React.ReactNode;
 }
 
@@ -17,12 +18,14 @@ const PrimaryButton = ({
   style = PRIMARY_BUTTON_STYLE.DEFAULT,
   attenuated = false,
   handlePress,
+  disabled = false,
   children,
 }: IPrimaryButton) => {
   return (
     <TouchableOpacity
       onPress={() => handlePress()}
-      style={[styles.button, styles[style]]}>
+      style={[styles.button, styles[style]]}
+      disabled={disabled}>
       <Text style={[styles.label, attenuated && styles.attenuated]}>
         {children}
       </Text>

@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import CorrectAnswerFeedback from '@/components/AnswerFeedback/Correct';
 import WrongAnswerFeedback from '@/components/AnswerFeedback/Wrong';
 import ProgressCircles from '@/components/ProgressCircles';
@@ -9,6 +9,7 @@ import { PRIMARY_BUTTON_STYLE, VIEW_STYLE } from '@/constants';
 import { useQuizzLogic } from '@/providers/QuizzLogic';
 
 const QuizzScreen = () => {
+  const [isInputEmpty, setIsInputEmpty] = useState(true);
   const { handleCheckAnswer, isCorrect } = useQuizzLogic();
 
   const renderBottomContainer = () => {
@@ -16,7 +17,8 @@ const QuizzScreen = () => {
       return (
         <PrimaryButton
           style={PRIMARY_BUTTON_STYLE.ACCENT}
-          handlePress={handleCheckAnswer}>
+          handlePress={handleCheckAnswer}
+          disabled={isInputEmpty}>
           verify
         </PrimaryButton>
       );
@@ -29,7 +31,7 @@ const QuizzScreen = () => {
     <MainView
       style={VIEW_STYLE.DEFAULT}
       TopContainer={<ProgressCircles />}
-      CenterContainer={<WordToTranslate />}
+      CenterContainer={<WordToTranslate setIsInputEmpty={setIsInputEmpty} />}
       BottomContainer={renderBottomContainer()}
     />
   );

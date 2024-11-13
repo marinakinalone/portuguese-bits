@@ -1,13 +1,38 @@
-import React, { useState } from 'react';
+import { useFocusEffect } from '@react-navigation/native';
+import React, { useCallback, useEffect, useRef, useState } from 'react';
 import { StyleSheet, TextInput, View } from 'react-native';
 import Title from '@/components/core/Title';
 import { useQuizzLogic } from '@/providers/QuizzLogic';
 import theme from '@/theme/defaultTheme';
 
-const WordToTranslate = () => {
+interface IWordToTranslate {
+  setIsInputEmpty: (isEmpty: boolean) => void;
+}
+
+const WordToTranslate = ({ setIsInputEmpty }: IWordToTranslate) => {
   const [isFocused, setIsFocused] = useState(false);
   const { handleCheckAnswer, isCorrect, input, setInput, wordToDisplay } =
     useQuizzLogic();
+  const inputRef = useRef<TextInput>(null);
+
+  useFocusEffect(
+    useCallback(() => {
+      const focus = () => {
+        setTimeout(() => {
+          inputRef?.current?.focus();
+        }, 1);
+      };
+      focus();
+      return focus;
+      // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [handleCheckAnswer]),
+  );
+
+  const isInputEmpty = input.trim() === '';
+
+  useEffect(() => {
+    setIsInputEmpty(isInputEmpty);
+  }, [input, isInputEmpty, setIsInputEmpty]);
 
   return (
     <View style={styles.container}>
@@ -21,14 +46,18 @@ const WordToTranslate = () => {
         ]}
         value={input}
         onChangeText={setInput}
-        onSubmitEditing={handleCheckAnswer}
+        onSubmitEditing={() => {
+          if (!isInputEmpty) {
+            handleCheckAnswer();
+          }
+        }}
         onFocus={() => setIsFocused(true)}
         onBlur={() => setIsFocused(false)}
         underlineColorAndroid="transparent"
-        autoFocus
         enablesReturnKeyAutomatically
         keyboardType="default"
         inputMode="text"
+        ref={inputRef}
       />
     </View>
   );
