@@ -4,12 +4,15 @@ import { Linking, StyleSheet, Text, View } from 'react-native';
 import PrimaryButton from '@/components/core/PrimaryButton';
 import { QUIZZ_VARIANTS, QuizzVariant, SCREENS } from '@/constants';
 import { PRIMARY_BUTTON_STYLE } from '@/constants';
+import { useQuizzLogic } from '@/providers/QuizzLogic';
 import theme from '@/theme/defaultTheme';
 
 const HomeScreen: React.FC = () => {
   const navigation = useNavigation();
+  const { setVariant } = useQuizzLogic();
 
   const handleQuizzPress = (variant: QuizzVariant) => {
+    setVariant(variant);
     navigation.navigate({
       name: SCREENS.QUIZZ,
       params: { variant, questionNumber: 0 },
@@ -43,12 +46,12 @@ const HomeScreen: React.FC = () => {
         <PrimaryButton
           style={PRIMARY_BUTTON_STYLE.DEFAULT}
           handlePress={() => handleQuizzPress(QUIZZ_VARIANTS.VERSION)}>
-          VERSION
+          {QUIZZ_VARIANTS.VERSION}
         </PrimaryButton>
         <PrimaryButton
           style={PRIMARY_BUTTON_STYLE.DEFAULT}
           handlePress={() => handleQuizzPress(QUIZZ_VARIANTS.THEME)}>
-          THEME
+          {QUIZZ_VARIANTS.THEME}
         </PrimaryButton>
         <PrimaryButton
           style={PRIMARY_BUTTON_STYLE.ACCENT}

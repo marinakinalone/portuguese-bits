@@ -1,6 +1,15 @@
 import { useNavigation } from '@react-navigation/native';
 import React, { createContext, ReactNode, useContext, useState } from 'react';
-import { DELAY_MS, QuizzVariant, SCREENS } from '@/constants';
+import {
+  DELAY_MS,
+  LANGUAGES,
+  QUIZZ_VARIANTS,
+  QuizzVariant,
+  SCREENS,
+} from '@/constants';
+
+const { FR, PT } = LANGUAGES;
+const { VERSION, THEME } = QUIZZ_VARIANTS;
 
 interface ITranslation {
   fr: string;
@@ -15,12 +24,11 @@ interface QuizzContextProps {
   handleNextQuestion: () => void;
   input: string;
   isCorrect: boolean | null;
-  isQuizzCompleted: boolean;
   questionNumber: number;
   setInput: (input: string) => void;
-  setIsQuizzCompleted: (completed: boolean) => void;
   setQuestionNumber: (number: number) => void;
-  variant: 'version' | 'theme';
+  setVariant: (variant: QuizzVariant) => void;
+  variant: QuizzVariant;
   wordToDisplay: string;
   wordsToTranslate: TranslationList;
 }
@@ -50,27 +58,31 @@ const checkAnswer = (input: string, answer: string) => {
   return normalizedInput === normalizedAnswer;
 };
 
+const translationTypeMapper = (variant: QuizzVariant) => {
+  switch (variant) {
+    case VERSION:
+      return { display: PT, answer: FR };
+    case THEME:
+      return { display: FR, answer: PT };
+    default:
+      return { display: FR, answer: PT };
+  }
+};
+
 export const QuizzProvider: React.FC<{ children: ReactNode }> = ({
   children,
 }) => {
   const [questionNumber, setQuestionNumber] = useState(0);
-  // TODO fix
-  const [variant, setVariant] = useState<'version' | 'theme'>('version');
-  const [isQuizzCompleted, setIsQuizzCompleted] = useState(false);
-  const [input, setInput] = useState('');
+  const [variant, setVariant] = useState<QuizzVariant | ''>('');
+  const [input, setInput] = useState<string | ''>('');
   const [isCorrect, setIsCorrect] = useState<boolean | null>(null);
 
   const navigation = useNavigation();
 
-  const wordToDisplay =
-    variant === 'version'
-      ? wordsToTranslate[questionNumber].pt
-      : wordsToTranslate[questionNumber].fr;
+  const { display, answer } = translationTypeMapper(variant);
 
-  const correctAnswer =
-    variant === 'version'
-      ? wordsToTranslate[questionNumber].fr
-      : wordsToTranslate[questionNumber].pt;
+  const wordToDisplay = wordsToTranslate[questionNumber]?.[display] || '';
+  const correctAnswer = wordsToTranslate[questionNumber]?.[answer] || '';
 
   const handleCheckAnswer = () => {
     const isAnswerCorrect = checkAnswer(input, correctAnswer);
@@ -83,17 +95,25 @@ export const QuizzProvider: React.FC<{ children: ReactNode }> = ({
     }
   };
 
+  const resetQuestion = ({
+    newQuestionNumber,
+  }: {
+    newQuestionNumber: number;
+  }) => {
+    setQuestionNumber(newQuestionNumber);
+    setInput('');
+    setIsCorrect(null);
+  };
+
   const handleNextQuestion = () => {
     const newQuestionNumber = questionNumber + 1;
 
     // TODO change to wordsToTranslate.length
     if (newQuestionNumber >= 2) {
       navigation.navigate(SCREENS.SUCCESS);
-      setIsQuizzCompleted(true);
+      resetQuestion({ newQuestionNumber: 0 });
     } else {
-      setQuestionNumber(newQuestionNumber);
-      setInput('');
-      setIsCorrect(null);
+      resetQuestion({ newQuestionNumber });
     }
   };
 
@@ -105,11 +125,10 @@ export const QuizzProvider: React.FC<{ children: ReactNode }> = ({
         handleNextQuestion,
         input,
         isCorrect,
-        isQuizzCompleted,
         questionNumber,
         setInput,
-        setIsQuizzCompleted,
         setQuestionNumber,
+        setVariant,
         variant,
         wordToDisplay,
         wordsToTranslate,
