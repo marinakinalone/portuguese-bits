@@ -6,9 +6,15 @@ import theme from '@/theme/defaultTheme';
 
 const WordToTranslate = () => {
   const [isFocused, setIsFocused] = useState(false);
-  const { handleCheckAnswer, isCorrect, input, setInput, wordToDisplay } =
-    useQuizzLogic();
-
+  const {
+    handleCheckAnswer,
+    isCorrect,
+    input,
+    setInput,
+    questionNumber,
+    wordToDisplay,
+  } = useQuizzLogic();
+  console.log('questionNumber ', questionNumber);
   return (
     <View style={styles.container}>
       <Title title={wordToDisplay} />

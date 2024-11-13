@@ -3,21 +3,19 @@ import { StyleSheet, View } from 'react-native';
 import { useQuizzLogic } from '@/providers/QuizzLogic';
 import theme from '@/theme/defaultTheme';
 
-interface IProgressCircles {
-  questionNumber: number;
-}
-
-const ProgressCircles = ({ questionNumber }: IProgressCircles) => {
-  const { result } = useQuizzLogic();
+const ProgressCircles = () => {
+  const { questionNumber, result } = useQuizzLogic();
 
   const circles = Array.from({ length: 10 }, (_, index) => {
-    const questionResult = result.find((r) => r.questionNumber === index);
+    const questionResult = result[index];
     let circleStyle;
+
+    if (index === questionNumber) {
+      circleStyle = styles.active;
+    }
 
     if (questionResult) {
       circleStyle = questionResult.isCorrect ? styles.correct : styles.wrong;
-    } else if (index < questionNumber + 1) {
-      circleStyle = styles.active;
     }
 
     return <View key={index} style={[styles.circle, circleStyle]} />;

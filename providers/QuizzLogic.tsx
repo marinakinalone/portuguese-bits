@@ -1,5 +1,11 @@
 import { useNavigation } from '@react-navigation/native';
-import React, { createContext, ReactNode, useContext, useState } from 'react';
+import React, {
+  createContext,
+  ReactNode,
+  useContext,
+  useEffect,
+  useState,
+} from 'react';
 import {
   DELAY_MS,
   LANGUAGES,
@@ -21,6 +27,10 @@ type TranslationList = ITranslation[];
 interface Result {
   questionNumber: number;
   isCorrect: boolean;
+}
+
+interface QuestionToReview {
+  questionNumber: number;
 }
 
 interface QuizzContextProps {
@@ -81,8 +91,12 @@ export const QuizzProvider: React.FC<{ children: ReactNode }> = ({
   const [questionNumber, setQuestionNumber] = useState(0);
   const [variant, setVariant] = useState<QuizzVariant | ''>('');
   const [input, setInput] = useState<string | ''>('');
+  // TODO merge result + isCorrect
   const [isCorrect, setIsCorrect] = useState<boolean | null>(null);
   const [result, setResult] = useState<Result[] | []>([]);
+  const [questionsToReview, setQuestionsToReview] = useState<
+    QuestionToReview[]
+  >([]);
 
   const navigation = useNavigation();
 
@@ -95,10 +109,27 @@ export const QuizzProvider: React.FC<{ children: ReactNode }> = ({
     const isAnswerCorrect = checkAnswer(input, correctAnswer);
     setIsCorrect(isAnswerCorrect);
 
-    setResult((prevResult) => [
-      ...prevResult,
-      { questionNumber, isCorrect: isAnswerCorrect },
-    ]);
+    if (!isAnswerCorrect) {
+      setQuestionsToReview((prevQuestions) => [
+        ...prevQuestions,
+        { questionNumber },
+      ]);
+    }
+
+    setResult((prevResult) => {
+      const existingResultIndex = prevResult.findIndex(
+        (r) => r.questionNumber === questionNumber,
+      );
+
+      if (existingResultIndex !== -1) {
+        const updatedResult = [...prevResult];
+        updatedResult[existingResultIndex].isCorrect = isAnswerCorrect;
+
+        return updatedResult;
+      } else {
+        return [...prevResult, { questionNumber, isCorrect: isAnswerCorrect }];
+      }
+    });
 
     if (isAnswerCorrect) {
       setTimeout(() => {
@@ -118,17 +149,27 @@ export const QuizzProvider: React.FC<{ children: ReactNode }> = ({
   };
 
   const handleNextQuestion = () => {
-    const newQuestionNumber = questionNumber + 1;
+    // TODO switch back to wordsToTranslate.length - 1
+    if (questionNumber < 2) {
+      resetQuestion({ newQuestionNumber: questionNumber + 1 });
+    }
 
-    // TODO change to wordsToTranslate.length
-    if (newQuestionNumber >= 2) {
-      navigation.navigate(SCREENS.SUCCESS);
+    const nextQuestionToReview = questionsToReview.shift();
+    resetQuestion({
+      newQuestionNumber: nextQuestionToReview?.questionNumber || 0,
+    });
+  };
+
+  useEffect(() => {
+    if (result.length === 3 && questionsToReview.length === 0) {
+      console.log('SUCCESS');
       resetQuestion({ newQuestionNumber: 0 });
       setResult([]);
-    } else {
-      resetQuestion({ newQuestionNumber });
+      console.log('success', questionNumber);
+      navigation.navigate(SCREENS.SUCCESS);
     }
-  };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [result, questionsToReview]);
 
   return (
     <QuizzContext.Provider

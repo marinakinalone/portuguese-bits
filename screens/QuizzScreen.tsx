@@ -9,7 +9,7 @@ import { PRIMARY_BUTTON_STYLE, VIEW_STYLE } from '@/constants';
 import { useQuizzLogic } from '@/providers/QuizzLogic';
 
 const QuizzScreen = () => {
-  const { handleCheckAnswer, isCorrect, questionNumber } = useQuizzLogic();
+  const { handleCheckAnswer, isCorrect } = useQuizzLogic();
 
   const renderBottomContainer = () => {
     if (isCorrect === null) {
@@ -21,13 +21,14 @@ const QuizzScreen = () => {
         </PrimaryButton>
       );
     }
+
     return isCorrect ? <CorrectAnswerFeedback /> : <WrongAnswerFeedback />;
   };
 
   return (
     <MainView
       style={VIEW_STYLE.DEFAULT}
-      TopContainer={<ProgressCircles questionNumber={questionNumber} />}
+      TopContainer={<ProgressCircles />}
       CenterContainer={<WordToTranslate />}
       BottomContainer={renderBottomContainer()}
     />
