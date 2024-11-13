@@ -1,5 +1,6 @@
 import React from 'react';
 import { StyleSheet, View } from 'react-native';
+import { useQuizzLogic } from '@/providers/QuizzLogic';
 import theme from '@/theme/defaultTheme';
 
 interface IProgressCircles {
@@ -7,12 +8,20 @@ interface IProgressCircles {
 }
 
 const ProgressCircles = ({ questionNumber }: IProgressCircles) => {
-  const circles = Array.from({ length: 10 }, (_, index) => (
-    <View
-      key={index}
-      style={[styles.circle, index < questionNumber + 1 && styles.activeCircle]}
-    />
-  ));
+  const { result } = useQuizzLogic();
+
+  const circles = Array.from({ length: 10 }, (_, index) => {
+    const questionResult = result.find((r) => r.questionNumber === index);
+    let circleStyle;
+
+    if (questionResult) {
+      circleStyle = questionResult.isCorrect ? styles.correct : styles.wrong;
+    } else if (index < questionNumber + 1) {
+      circleStyle = styles.active;
+    }
+
+    return <View key={index} style={[styles.circle, circleStyle]} />;
+  });
 
   return <View style={styles.container}>{circles}</View>;
 };
@@ -31,8 +40,14 @@ const styles = StyleSheet.create({
     backgroundColor: theme.colors.chocolate,
     marginHorizontal: 1,
   },
-  activeCircle: {
+  active: {
     backgroundColor: theme.colors.sunshine,
+  },
+  correct: {
+    backgroundColor: theme.colors.pistachio,
+  },
+  wrong: {
+    backgroundColor: theme.colors.coral,
   },
 });
 

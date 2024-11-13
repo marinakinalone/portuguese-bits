@@ -18,6 +18,11 @@ interface ITranslation {
 
 type TranslationList = ITranslation[];
 
+interface Result {
+  questionNumber: number;
+  isCorrect: boolean;
+}
+
 interface QuizzContextProps {
   correctAnswer: string;
   handleCheckAnswer: () => void;
@@ -25,6 +30,7 @@ interface QuizzContextProps {
   input: string;
   isCorrect: boolean | null;
   questionNumber: number;
+  result: Result[];
   setInput: (input: string) => void;
   setQuestionNumber: (number: number) => void;
   setVariant: (variant: QuizzVariant) => void;
@@ -76,6 +82,7 @@ export const QuizzProvider: React.FC<{ children: ReactNode }> = ({
   const [variant, setVariant] = useState<QuizzVariant | ''>('');
   const [input, setInput] = useState<string | ''>('');
   const [isCorrect, setIsCorrect] = useState<boolean | null>(null);
+  const [result, setResult] = useState<Result[] | []>([]);
 
   const navigation = useNavigation();
 
@@ -87,6 +94,11 @@ export const QuizzProvider: React.FC<{ children: ReactNode }> = ({
   const handleCheckAnswer = () => {
     const isAnswerCorrect = checkAnswer(input, correctAnswer);
     setIsCorrect(isAnswerCorrect);
+
+    setResult((prevResult) => [
+      ...prevResult,
+      { questionNumber, isCorrect: isAnswerCorrect },
+    ]);
 
     if (isAnswerCorrect) {
       setTimeout(() => {
@@ -112,6 +124,7 @@ export const QuizzProvider: React.FC<{ children: ReactNode }> = ({
     if (newQuestionNumber >= 2) {
       navigation.navigate(SCREENS.SUCCESS);
       resetQuestion({ newQuestionNumber: 0 });
+      setResult([]);
     } else {
       resetQuestion({ newQuestionNumber });
     }
@@ -126,6 +139,7 @@ export const QuizzProvider: React.FC<{ children: ReactNode }> = ({
         input,
         isCorrect,
         questionNumber,
+        result,
         setInput,
         setQuestionNumber,
         setVariant,

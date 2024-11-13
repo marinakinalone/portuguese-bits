@@ -3,10 +3,10 @@ export const QUIZZ_VARIANTS = {
   THEME: 'theme',
 };
 
-export const LANGUAGE = {
+export const LANGUAGES = {
   PT: 'pt',
   FR: 'fr',
-};
+} as const;
 
 type QuizzVariantsType = typeof QUIZZ_VARIANTS;
 
