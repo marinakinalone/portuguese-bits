@@ -91,12 +91,12 @@ export const QuizzProvider: React.FC<{ children: ReactNode }> = ({
   const [questionNumber, setQuestionNumber] = useState(0);
   const [variant, setVariant] = useState<QuizzVariant | ''>('');
   const [input, setInput] = useState<string | ''>('');
-  // TODO merge result + isCorrect
   const [isCorrect, setIsCorrect] = useState<boolean | null>(null);
-  const [result, setResult] = useState<Result[] | []>([]);
+  const [result, setResult] = useState<Result[]>([]);
   const [questionsToReview, setQuestionsToReview] = useState<
     QuestionToReview[]
   >([]);
+  const [isNavigating, setIsNavigating] = useState(false);
 
   const navigation = useNavigation();
 
@@ -149,26 +149,40 @@ export const QuizzProvider: React.FC<{ children: ReactNode }> = ({
   };
 
   const handleNextQuestion = () => {
-    // TODO switch back to wordsToTranslate.length - 1
+    // TODO replace with wordsToTranslate.length - 1
     if (questionNumber < 2) {
       resetQuestion({ newQuestionNumber: questionNumber + 1 });
+    } else {
+      const nextQuestionToReview = questionsToReview.shift();
+      if (nextQuestionToReview) {
+        resetQuestion({
+          newQuestionNumber: nextQuestionToReview.questionNumber,
+        });
+      } else {
+        setIsNavigating(true);
+        resetQuestion({ newQuestionNumber: 0 });
+      }
     }
-
-    const nextQuestionToReview = questionsToReview.shift();
-    resetQuestion({
-      newQuestionNumber: nextQuestionToReview?.questionNumber || 0,
-    });
   };
 
   useEffect(() => {
-    if (result.length === 3 && questionsToReview.length === 0) {
-      console.log('SUCCESS');
-      resetQuestion({ newQuestionNumber: 0 });
-      setResult([]);
-      console.log('success', questionNumber);
+    if (isNavigating) {
       navigation.navigate(SCREENS.SUCCESS);
+      setResult([]);
+      setIsNavigating(false);
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [isNavigating, navigation]);
+
+  useEffect(() => {
+    if (
+      // TODO replace with wordsToTranslate.length - 1
+      result.length === 3 &&
+      questionsToReview.length === 0
+    ) {
+      setTimeout(() => {
+        setIsNavigating(true);
+      }, DELAY_MS);
+    }
   }, [result, questionsToReview]);
 
   return (

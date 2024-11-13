@@ -10,12 +10,12 @@ const ProgressCircles = () => {
     const questionResult = result[index];
     let circleStyle;
 
-    if (index === questionNumber) {
-      circleStyle = styles.active;
-    }
-
     if (questionResult) {
       circleStyle = questionResult.isCorrect ? styles.correct : styles.wrong;
+    }
+
+    if (index === questionNumber) {
+      circleStyle = styles.active;
     }
 
     return <View key={index} style={[styles.circle, circleStyle]} />;
