@@ -11,6 +11,8 @@ export const colors = {
   coral: '#FE8D69',
   pistachio: '#A3D49B',
   cloud: '#D9D9D9',
+  coffee: '#6F5400',
+  latte: '#DDCCB4',
 };
 
 export const palette = {
@@ -36,6 +38,11 @@ export const palette = {
     backgroundColor: colors.coral,
     color: colors.midnight,
     borderColor: colors.midnight,
+  },
+  disabled: {
+    backgroundColor: colors.latte,
+    color: colors.coffee,
+    borderColor: colors.coffee,
   },
   input: {
     default: {

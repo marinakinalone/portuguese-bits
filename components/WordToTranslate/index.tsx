@@ -11,6 +11,7 @@ interface IWordToTranslate {
 
 const WordToTranslate = ({ setIsInputEmpty }: IWordToTranslate) => {
   const [isFocused, setIsFocused] = useState(false);
+  const [isDisabled, setIsDisabled] = useState(false);
   const { handleCheckAnswer, isCorrect, input, setInput, wordToDisplay } =
     useQuizzLogic();
   const inputRef = useRef<TextInput>(null);
@@ -33,6 +34,14 @@ const WordToTranslate = ({ setIsInputEmpty }: IWordToTranslate) => {
   useEffect(() => {
     setIsInputEmpty(isInputEmpty);
   }, [input, isInputEmpty, setIsInputEmpty]);
+
+  useEffect(() => {
+    if (isCorrect !== null) {
+      setIsDisabled(true);
+    } else {
+      setIsDisabled(false);
+    }
+  }, [isCorrect]);
 
   return (
     <View style={styles.container}>
@@ -58,6 +67,7 @@ const WordToTranslate = ({ setIsInputEmpty }: IWordToTranslate) => {
         keyboardType="default"
         inputMode="text"
         ref={inputRef}
+        editable={!isDisabled}
       />
     </View>
   );

@@ -24,9 +24,14 @@ const PrimaryButton = ({
   return (
     <TouchableOpacity
       onPress={() => handlePress()}
-      style={[styles.button, styles[style]]}
+      style={[styles.button, styles[style], disabled && styles.disabled]}
       disabled={disabled}>
-      <Text style={[styles.label, attenuated && styles.attenuated]}>
+      <Text
+        style={[
+          styles.label,
+          attenuated && styles.attenuated,
+          disabled && styles.disabled,
+        ]}>
         {children}
       </Text>
     </TouchableOpacity>
@@ -61,6 +66,9 @@ const styles = StyleSheet.create({
   },
   warning: {
     ...theme.palette.warning,
+  },
+  disabled: {
+    ...theme.palette.disabled,
   },
 });
 
