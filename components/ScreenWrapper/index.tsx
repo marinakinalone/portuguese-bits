@@ -18,11 +18,7 @@ import SuccessScreenBackground_2 from '../../assets/backgrounds/success/success_
 import SuccessScreenBackground_3 from '../../assets/backgrounds/success/success_3.jpg';
 import VocabularyScreenBackground from '../../assets/backgrounds/vocabulary.jpg';
 import { SCREENS } from '@/constants';
-import {
-  bottomValue,
-  windowHeight,
-  windowWidth,
-} from '@/utils/windowDimensions';
+import { bottomValue, windowHeight, windowWidth } from '@/utils';
 
 interface ScreenWrapperProps {
   screen: string;

@@ -86,8 +86,9 @@ const styles = StyleSheet.create({
     marginBottom: 40,
     paddingHorizontal: 24,
     width: '80%',
+    fontFamily: theme.fonts.secondary.fontFamily,
     ...theme.palette.input.default,
-    borderColor: 'blue',
+    ...theme.fonts.secondary.medium,
   },
   correctInput: {
     ...theme.palette.input.correct,

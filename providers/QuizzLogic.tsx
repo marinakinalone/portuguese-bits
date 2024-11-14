@@ -6,17 +6,8 @@ import React, {
   useEffect,
   useState,
 } from 'react';
-import {
-  DELAY_MS,
-  LANGUAGES,
-  QUIZZ_VARIANTS,
-  QuizzVariant,
-  SCREENS,
-} from '@/constants';
-
-const { FR, PT } = LANGUAGES;
-const { VERSION, THEME } = QUIZZ_VARIANTS;
-
+import { DELAY_MS, QuizzVariant, SCREENS } from '@/constants';
+import { checkAnswer, translationTypeMapper } from '@/utils';
 interface ITranslation {
   fr: string;
   pt: string;
@@ -63,27 +54,6 @@ const wordsToTranslate: TranslationList = [
   { fr: 'Je vais bien', pt: 'Estou bem' },
   { fr: 'Je ne comprends pas', pt: 'Não entendo' },
 ];
-
-const removeAccents = (str: string) => {
-  return str.normalize('NFD').replace(/[\u0300-\u036f]/g, '');
-};
-
-const checkAnswer = (input: string, answer: string) => {
-  const normalizedInput = removeAccents(input.toLowerCase());
-  const normalizedAnswer = removeAccents(answer.toLowerCase());
-  return normalizedInput === normalizedAnswer;
-};
-
-const translationTypeMapper = (variant: QuizzVariant) => {
-  switch (variant) {
-    case VERSION:
-      return { display: PT, answer: FR };
-    case THEME:
-      return { display: FR, answer: PT };
-    default:
-      return { display: FR, answer: PT };
-  }
-};
 
 export const QuizzProvider: React.FC<{ children: ReactNode }> = ({
   children,

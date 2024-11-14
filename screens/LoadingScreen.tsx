@@ -13,11 +13,7 @@ import loading_09 from '@/assets/loading/loading_09.jpg';
 import loading_10 from '@/assets/loading/loading_10.jpg';
 import loading_11 from '@/assets/loading/loading_11.jpg';
 import loading_12 from '@/assets/loading/loading_12.jpg';
-import {
-  bottomValue,
-  windowHeight,
-  windowWidth,
-} from '@/utils/windowDimensions';
+import { bottomValue, windowHeight, windowWidth } from '@/utils';
 
 const imageSources = [
   loading_00,
