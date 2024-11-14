@@ -41,12 +41,12 @@ const PrimaryButton = ({
 const styles = StyleSheet.create({
   button: {
     paddingTop: 2,
+    paddingHorizontal: 16,
     borderRadius: 16,
     marginVertical: 4,
     alignItems: 'center',
     borderWidth: 1,
-    width: 144,
-    maxWidth: 144,
+    minWidth: 144,
   },
   label: {
     ...theme.fonts.primary,

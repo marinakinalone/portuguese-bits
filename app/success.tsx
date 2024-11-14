@@ -5,7 +5,7 @@ import QuizzSuccessScreen from '@/screens/QuizzSuccessScreen';
 
 const Success: React.FC = () => {
   return (
-    <ScreenWrapper screen={SCREENS.SUCCESS}>
+    <ScreenWrapper screen={SCREENS.SUCCESS} showNavigation={false}>
       <QuizzSuccessScreen />
     </ScreenWrapper>
   );

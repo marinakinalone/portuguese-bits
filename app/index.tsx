@@ -5,7 +5,7 @@ import HomeScreen from '@/screens/HomeScreen';
 
 const Home: React.FC = () => {
   return (
-    <ScreenWrapper screen={SCREENS.HOME}>
+    <ScreenWrapper screen={SCREENS.HOME} showNavigation={false}>
       <HomeScreen />
     </ScreenWrapper>
   );

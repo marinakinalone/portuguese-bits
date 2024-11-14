@@ -17,12 +17,14 @@ import SuccessScreenBackground_1 from '../../assets/backgrounds/success/success_
 import SuccessScreenBackground_2 from '../../assets/backgrounds/success/success_2.jpg';
 import SuccessScreenBackground_3 from '../../assets/backgrounds/success/success_3.jpg';
 import VocabularyScreenBackground from '../../assets/backgrounds/vocabulary.jpg';
+import NavigationBar from '../NavigationBar';
 import { SCREENS } from '@/constants';
 import { bottomValue, windowHeight, windowWidth } from '@/utils';
 
-interface ScreenWrapperProps {
+interface IScreenWrapper {
   screen: string;
   children: ReactNode;
+  showNavigation?: boolean;
   questionNumber?: number;
 }
 
@@ -69,11 +71,12 @@ const mapScreenToBackground = (
   return screenBackgrounds[screenName] || StartScreenBackground;
 };
 
-const ScreenWrapper: React.FC<ScreenWrapperProps> = ({
+const ScreenWrapper = ({
   screen,
   questionNumber,
+  showNavigation = true,
   children,
-}) => {
+}: IScreenWrapper) => {
   const navigation = useNavigation();
 
   useEffect(() => {
@@ -86,6 +89,7 @@ const ScreenWrapper: React.FC<ScreenWrapperProps> = ({
         source={mapScreenToBackground(screen, questionNumber)}
         style={styles.background}
       />
+      {showNavigation && <NavigationBar />}
       {children}
     </View>
   );
