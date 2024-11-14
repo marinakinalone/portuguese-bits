@@ -8,6 +8,7 @@ declare global {
       [SCREENS.NOT_FOUND]: undefined;
       [SCREENS.HOME]: undefined;
       [SCREENS.VOCABULARY]: undefined;
+      [SCREENS.LOGIN]: undefined;
       [SCREENS.QUIZZ]: { questionNumber: number; variant: QuizzVariant };
     }
   }

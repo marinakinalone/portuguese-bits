@@ -171,8 +171,7 @@ export const QuizzProvider: React.FC<{ children: ReactNode }> = ({
         variant,
         wordToDisplay,
         wordsToTranslate,
-      }}
-    >
+      }}>
       {children}
     </QuizzContext.Provider>
   );
