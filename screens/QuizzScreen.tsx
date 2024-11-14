@@ -18,7 +18,8 @@ const QuizzScreen = () => {
         <PrimaryButton
           style={PRIMARY_BUTTON_STYLE.ACCENT}
           handlePress={handleCheckAnswer}
-          disabled={isInputEmpty}>
+          disabled={isInputEmpty}
+        >
           verify
         </PrimaryButton>
       );

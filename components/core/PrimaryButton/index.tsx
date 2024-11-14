@@ -25,13 +25,15 @@ const PrimaryButton = ({
     <TouchableOpacity
       onPress={() => handlePress()}
       style={[styles.button, styles[style], disabled && styles.disabled]}
-      disabled={disabled}>
+      disabled={disabled}
+    >
       <Text
         style={[
           styles.label,
           attenuated && styles.attenuated,
           disabled && styles.disabled,
-        ]}>
+        ]}
+      >
         {children}
       </Text>
     </TouchableOpacity>

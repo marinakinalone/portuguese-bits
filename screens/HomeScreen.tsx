@@ -45,17 +45,20 @@ const HomeScreen: React.FC = () => {
       <View style={styles.buttonStack}>
         <PrimaryButton
           style={PRIMARY_BUTTON_STYLE.DEFAULT}
-          handlePress={() => handleQuizzPress(QUIZZ_VARIANTS.VERSION)}>
+          handlePress={() => handleQuizzPress(QUIZZ_VARIANTS.VERSION)}
+        >
           {QUIZZ_VARIANTS.VERSION}
         </PrimaryButton>
         <PrimaryButton
           style={PRIMARY_BUTTON_STYLE.DEFAULT}
-          handlePress={() => handleQuizzPress(QUIZZ_VARIANTS.THEME)}>
+          handlePress={() => handleQuizzPress(QUIZZ_VARIANTS.THEME)}
+        >
           {QUIZZ_VARIANTS.THEME}
         </PrimaryButton>
         <PrimaryButton
           style={PRIMARY_BUTTON_STYLE.ACCENT}
-          handlePress={handleVocabularyPress}>
+          handlePress={handleVocabularyPress}
+        >
           VOCABULARY
         </PrimaryButton>
       </View>
