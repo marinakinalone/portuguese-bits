@@ -3,12 +3,9 @@ export const QUIZZ_VARIANTS = {
   THEME: 'theme',
 };
 
-export const LANGUAGES = {
-  PT: 'pt',
-  FR: 'fr',
-} as const;
-
 type QuizzVariantsType = typeof QUIZZ_VARIANTS;
+
+export const LOCAL_STORAGE_VARIANT_KEY = 'variant';
 
 export type QuizzVariant = QuizzVariantsType[keyof QuizzVariantsType];
 

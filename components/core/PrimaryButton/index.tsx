@@ -1,4 +1,4 @@
-import { Text, TouchableOpacity } from 'react-native';
+import { Pressable, Text } from 'react-native';
 import { StyleSheet } from 'react-native';
 import { PRIMARY_BUTTON_STYLE, QuizzVariant } from '@/constants';
 import theme from '@/theme/defaultTheme';
@@ -22,7 +22,7 @@ const PrimaryButton = ({
   children,
 }: IPrimaryButton) => {
   return (
-    <TouchableOpacity
+    <Pressable
       onPress={() => handlePress()}
       style={[styles.button, styles[style], disabled && styles.disabled]}
       disabled={disabled}>
@@ -34,7 +34,7 @@ const PrimaryButton = ({
         ]}>
         {children}
       </Text>
-    </TouchableOpacity>
+    </Pressable>
   );
 };
 

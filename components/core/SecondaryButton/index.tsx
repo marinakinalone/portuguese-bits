@@ -1,5 +1,5 @@
 import React from 'react';
-import { StyleSheet, Text, TouchableOpacity } from 'react-native';
+import { Pressable, StyleSheet, Text } from 'react-native';
 import theme from '@/theme/defaultTheme';
 
 interface ISecondaryButton {
@@ -9,9 +9,9 @@ interface ISecondaryButton {
 
 const SecondaryButton = ({ handlePress, children }: ISecondaryButton) => {
   return (
-    <TouchableOpacity style={styles.button} onPress={handlePress}>
+    <Pressable style={styles.button} onPress={handlePress}>
       <Text style={styles.text}>{children}</Text>
-    </TouchableOpacity>
+    </Pressable>
   );
 };
 

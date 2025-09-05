@@ -1,10 +1,10 @@
 import React from 'react';
 import { StyleSheet, View } from 'react-native';
-import { useQuizzLogic } from '@/providers/QuizzLogic';
+import useQuizzLogicStore from '@/stores/QuizzLogic';
 import theme from '@/theme/defaultTheme';
 
 const ProgressCircles = () => {
-  const { questionNumber, result } = useQuizzLogic();
+  const { questionNumber, result } = useQuizzLogicStore();
 
   const circles = Array.from({ length: 10 }, (_, index) => {
     const questionResult = result[index];

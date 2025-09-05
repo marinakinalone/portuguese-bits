@@ -10,6 +10,9 @@ declare global {
       [SCREENS.VOCABULARY]: undefined;
       [SCREENS.LOGIN]: undefined;
       [SCREENS.QUIZZ]: { questionNumber: number; variant: QuizzVariant };
+      [SCREENS.ADD]: undefined;
+      // INFO the id is the French translation of the word
+      [SCREENS.EDIT]: { id: string };
     }
   }
 }

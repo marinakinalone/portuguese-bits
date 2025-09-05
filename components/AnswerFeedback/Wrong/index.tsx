@@ -2,14 +2,17 @@ import React from 'react';
 import { StyleSheet, View } from 'react-native';
 import Message from '@/components/core/Message';
 import SecondaryButton from '@/components/core/SecondaryButton';
-import { useQuizzLogic } from '@/providers/QuizzLogic';
+import useQuizzLogicStore from '@/stores/QuizzLogic';
 
 const WrongAnswerFeedback = () => {
-  const { correctAnswer, handleNextQuestion } = useQuizzLogic();
+  const feedbackAnswer = useQuizzLogicStore((state) => state.feedbackAnswer);
+  const handleNextQuestion = useQuizzLogicStore(
+    (state) => state.handleNextQuestion,
+  );
 
   return (
     <View style={styles.container}>
-      <Message>WRONG: &lsquo;{correctAnswer}&rsquo;</Message>
+      <Message>WRONG: &lsquo;{feedbackAnswer}&rsquo;</Message>
       <SecondaryButton handlePress={() => handleNextQuestion()}>
         next question
       </SecondaryButton>

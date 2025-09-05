@@ -13,6 +13,8 @@ export const colors = {
   cloud: '#D9D9D9',
   coffee: '#6F5400',
   latte: '#DDCCB4',
+  basil: '#0B783F',
+  snow: 'rgba(244, 231, 212, 0.5)',
 };
 
 export const palette = {

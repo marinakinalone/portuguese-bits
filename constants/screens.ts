@@ -5,4 +5,6 @@ export const SCREENS = {
   VOCABULARY: 'vocabulary',
   NOT_FOUND: '+not-found',
   LOGIN: 'login',
+  EDIT: 'vocabulary/edit',
+  ADD: 'vocabulary/add',
 } as const;

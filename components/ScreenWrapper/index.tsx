@@ -109,6 +109,7 @@ const styles = StyleSheet.create({
     bottom: bottomValue,
     width: windowWidth,
     maxWidth: 500,
+    height: windowHeight,
     maxHeight: windowHeight,
     flex: 1,
   },

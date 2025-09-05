@@ -4,17 +4,25 @@ import { StyleSheet, View } from 'react-native';
 import PrimaryButton from '../core/PrimaryButton';
 import { SCREENS } from '@/constants';
 
-const NavigationBar = () => {
+interface INavigationBar {
+  destination?: typeof SCREENS.HOME | typeof SCREENS.VOCABULARY;
+  label?: string;
+}
+
+const NavigationBar = ({
+  destination = SCREENS.HOME,
+  label = 'back to home page',
+}: INavigationBar) => {
   const navigation = useNavigation();
 
   const navigateToHomePage = () => {
-    navigation.navigate(SCREENS.HOME);
+    navigation.navigate(destination);
   };
 
   return (
     <View style={styles.navigation}>
       <PrimaryButton handlePress={() => navigateToHomePage()} attenuated>
-        back to home page
+        {label}
       </PrimaryButton>
     </View>
   );

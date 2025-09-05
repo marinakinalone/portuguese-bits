@@ -5,9 +5,8 @@ import * as SplashScreen from 'expo-splash-screen';
 import { useEffect } from 'react';
 import 'react-native-reanimated'; // TODO use or not?
 import { SCREENS } from '@/constants';
-import { LoadingProvider } from '@/providers/Loading';
-import { QuizzProvider } from '@/providers/QuizzLogic';
 import LoadingScreen from '@/screens/LoadingScreen';
+import { LoadingProvider } from '@/stores/Loading';
 
 const { HOME, QUIZZ, NOT_FOUND, SUCCESS, VOCABULARY } = SCREENS;
 
@@ -34,15 +33,13 @@ export default function RootLayout() {
 
   return (
     <LoadingProvider>
-      <QuizzProvider>
-        <Stack>
-          <Stack.Screen name={HOME} options={{ title: 'home' }} />
-          <Stack.Screen name={QUIZZ} initialParams={{ questionNumber: 0 }} />
-          <Stack.Screen name={SUCCESS} />
-          <Stack.Screen name={VOCABULARY} />
-          <Stack.Screen name={NOT_FOUND} />
-        </Stack>
-      </QuizzProvider>
+      <Stack>
+        <Stack.Screen name={HOME} options={{ title: 'home' }} />
+        <Stack.Screen name={QUIZZ} initialParams={{ questionNumber: 0 }} />
+        <Stack.Screen name={SUCCESS} />
+        <Stack.Screen name={VOCABULARY} />
+        <Stack.Screen name={NOT_FOUND} />
+      </Stack>
     </LoadingProvider>
   );
 }

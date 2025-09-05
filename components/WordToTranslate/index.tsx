@@ -2,8 +2,10 @@ import { useFocusEffect } from '@react-navigation/native';
 import React, { useCallback, useEffect, useRef, useState } from 'react';
 import { StyleSheet, TextInput, View } from 'react-native';
 import Title from '@/components/core/Title';
-import { useQuizzLogic } from '@/providers/QuizzLogic';
+import useQuizzLogicStore from '@/stores/QuizzLogic';
+import { wordsToTranslate } from '@/stores/QuizzLogic';
 import theme from '@/theme/defaultTheme';
+import { translationTypeMapper } from '@/utils';
 
 interface IWordToTranslate {
   setIsInputEmpty: (isEmpty: boolean) => void;
@@ -12,8 +14,16 @@ interface IWordToTranslate {
 const WordToTranslate = ({ setIsInputEmpty }: IWordToTranslate) => {
   const [isFocused, setIsFocused] = useState(false);
   const [isDisabled, setIsDisabled] = useState(false);
-  const { handleCheckAnswer, isCorrect, input, setInput, wordToDisplay } =
-    useQuizzLogic();
+
+  const variant = useQuizzLogicStore((state) => state.variant);
+  const questionNumber = useQuizzLogicStore((state) => state.questionNumber);
+  const handleCheckAnswer = useQuizzLogicStore(
+    (state) => state.handleCheckAnswer,
+  );
+  const isCorrect = useQuizzLogicStore((state) => state.isCorrect);
+  const input = useQuizzLogicStore((state) => state.input);
+  const { setInput } = useQuizzLogicStore();
+
   const inputRef = useRef<TextInput>(null);
 
   useFocusEffect(
@@ -43,9 +53,19 @@ const WordToTranslate = ({ setIsInputEmpty }: IWordToTranslate) => {
     }
   }, [isCorrect]);
 
+  const getWordToDisplay = () => {
+    const { display } = translationTypeMapper(variant);
+    if (display === 'none') {
+      return 'nothing to display';
+    }
+
+    return wordsToTranslate[questionNumber]?.[
+      display as keyof (typeof wordsToTranslate)[0]
+    ];
+  };
   return (
     <View style={styles.container}>
-      <Title title={wordToDisplay} />
+      <Title title={getWordToDisplay()} />
       <TextInput
         style={[
           styles.input,
