@@ -1,9 +1,14 @@
 import { useFocusEffect } from '@react-navigation/native';
-import React, { useCallback, useEffect, useRef, useState } from 'react';
+import React, {
+  useCallback,
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+} from 'react';
 import { StyleSheet, TextInput, View } from 'react-native';
 import Title from '@/components/core/Title';
 import useQuizzLogicStore from '@/stores/QuizzLogic';
-import { wordsToTranslate } from '@/stores/QuizzLogic';
 import theme from '@/theme/defaultTheme';
 import { translationTypeMapper } from '@/utils';
 
@@ -15,8 +20,43 @@ const WordToTranslate = ({ setIsInputEmpty }: IWordToTranslate) => {
   const [isFocused, setIsFocused] = useState(false);
   const [isDisabled, setIsDisabled] = useState(false);
 
+  // Subscribe to all dependencies so Zustand tracks them properly
   const variant = useQuizzLogicStore((state) => state.variant);
+  const wordsToTranslate = useQuizzLogicStore(
+    (state) => state.wordsToTranslate,
+  );
   const questionNumber = useQuizzLogicStore((state) => state.questionNumber);
+  const isLoadingWords = useQuizzLogicStore((state) => state.isLoadingWords);
+  const wordsError = useQuizzLogicStore((state) => state.wordsError);
+
+  // Compute wordToDisplay locally so it updates when dependencies change
+  const wordToDisplay = useMemo(() => {
+    const { display } = translationTypeMapper(variant);
+    // If no valid variant, return "nothing to display"
+    if (display === 'none') {
+      return 'nothing to display';
+    }
+
+    if (isLoadingWords) {
+      return 'Loading...';
+    }
+
+    if (wordsError) {
+      return `Error: ${wordsError}`;
+    }
+
+    if (!wordsToTranslate.length) {
+      return 'No words available';
+    }
+
+    const word =
+      wordsToTranslate[questionNumber]?.[
+        display as keyof (typeof wordsToTranslate)[0]
+      ];
+
+    return word || 'No word available';
+  }, [variant, wordsToTranslate, questionNumber, isLoadingWords, wordsError]);
+
   const handleCheckAnswer = useQuizzLogicStore(
     (state) => state.handleCheckAnswer,
   );
@@ -53,19 +93,9 @@ const WordToTranslate = ({ setIsInputEmpty }: IWordToTranslate) => {
     }
   }, [isCorrect]);
 
-  const getWordToDisplay = () => {
-    const { display } = translationTypeMapper(variant);
-    if (display === 'none') {
-      return 'nothing to display';
-    }
-
-    return wordsToTranslate[questionNumber]?.[
-      display as keyof (typeof wordsToTranslate)[0]
-    ];
-  };
   return (
     <View style={styles.container}>
-      <Title title={getWordToDisplay()} />
+      <Title title={wordToDisplay} />
       <TextInput
         style={[
           styles.input,

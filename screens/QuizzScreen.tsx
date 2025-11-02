@@ -13,6 +13,16 @@ import useQuizzLogicStore from '@/stores/QuizzLogic';
 const QuizzScreen = () => {
   const [isInputEmpty, setIsInputEmpty] = useState(true);
   const navigation = useNavigation();
+  const { wordsToTranslate, fetchWordsForQuiz, isLoadingWords } =
+    useQuizzLogicStore();
+
+  useEffect(() => {
+    // Only fetch if words array is empty and we're not already loading
+    if (!wordsToTranslate.length && !isLoadingWords) {
+      fetchWordsForQuiz();
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []); // Only run once on mount
 
   const handleCheckAnswer = useQuizzLogicStore(
     (state) => state.handleCheckAnswer,

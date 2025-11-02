@@ -12,7 +12,7 @@ declare global {
       [SCREENS.QUIZZ]: { questionNumber: number; variant: QuizzVariant };
       [SCREENS.ADD]: undefined;
       // INFO the id is the French translation of the word
-      [SCREENS.EDIT]: { id: string };
+      [SCREENS.EDIT]: { id: string; word?: string };
     }
   }
 }

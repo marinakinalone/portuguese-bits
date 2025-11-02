@@ -1,0 +1,13 @@
+{
+  "$schema": "https://unpkg.com/knip@5/schema.json",
+  "entry": ["app/**/*.{ts,tsx}"],
+  "project": [
+    "**/*.{ts,tsx}",
+    "!**/*.test.{ts,tsx}",
+    "!**/__tests__/**",
+    "!**/__snapshots__/**",
+    "!node_modules/**"
+  ],
+  "ignore": ["expo-env.d.ts", "**/*.d.ts"],
+  "ignoreDependencies": []
+}

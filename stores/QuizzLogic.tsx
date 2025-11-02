@@ -1,21 +1,9 @@
 import { create } from 'zustand';
 
+import useVocabularyStore from './Vocabulary';
 import { DELAY_MS, QuizzVariant, TranslationList } from '@/constants';
 import { checkAnswer, translationTypeMapper } from '@/utils';
 
-// TODO delete when fetch database is implemented
-export const wordsToTranslate: TranslationList = [
-  { fr: 'Bonjour', pt: 'Olá' },
-  { fr: 'Merci', pt: 'Obrigado' },
-  { fr: 'Oui', pt: 'Sim' },
-  { fr: 'Non', pt: 'Não' },
-  { fr: `S'il vous plaît`, pt: 'Por favor' },
-  { fr: 'Excusez-moi', pt: 'Desculpe' },
-  { fr: 'Au revoir', pt: 'Tchau' },
-  { fr: 'Comment ça va?', pt: 'Como vai?' },
-  { fr: 'Je vais bien', pt: 'Estou bem' },
-  { fr: 'Je ne comprends pas', pt: 'Não entendo' },
-];
 interface Result {
   questionNumber: number;
   isCorrect: boolean;
@@ -23,6 +11,7 @@ interface Result {
 
 interface QuestionToReview {
   questionNumber: number;
+  correctAnswer: string;
 }
 
 interface QuizzLogicStore {
@@ -37,6 +26,8 @@ interface QuizzLogicStore {
 
   wordToDisplay: string;
   wordsToTranslate: TranslationList;
+  isLoadingWords: boolean;
+  wordsError: string | null;
 
   setInput: (input: string) => void;
   setVariant: (variant: QuizzVariant) => void;
@@ -46,6 +37,7 @@ interface QuizzLogicStore {
   resetQuestion: (params: { newQuestionNumber: number }) => void;
   setShouldNavigateToSuccessScreen: (should: boolean) => void;
   resetQuiz: () => void;
+  fetchWordsForQuiz: () => Promise<void>;
 }
 
 const useQuizzLogicStore = create<QuizzLogicStore>((set, get) => ({
@@ -58,7 +50,9 @@ const useQuizzLogicStore = create<QuizzLogicStore>((set, get) => ({
   shouldNavigateToSuccessScreen: false,
   feedbackAnswer: '',
 
-  wordsToTranslate,
+  wordsToTranslate: [],
+  isLoadingWords: false,
+  wordsError: null,
 
   get wordToDisplay() {
     const state = get();
@@ -69,9 +63,43 @@ const useQuizzLogicStore = create<QuizzLogicStore>((set, get) => ({
       return 'nothing to display';
     }
 
-    return wordsToTranslate[state.questionNumber]?.[
-      display as keyof (typeof wordsToTranslate)[0]
-    ];
+    if (state.isLoadingWords) {
+      return 'Loading...';
+    }
+
+    if (state.wordsError) {
+      return `Error: ${state.wordsError}`;
+    }
+
+    if (!state.wordsToTranslate.length) {
+      return 'No words available';
+    }
+
+    const word =
+      state.wordsToTranslate[state.questionNumber]?.[
+        display as keyof (typeof state.wordsToTranslate)[0]
+      ];
+
+    return word || 'No word available';
+  },
+
+  fetchWordsForQuiz: async () => {
+    set({ isLoadingWords: true, wordsError: null });
+    try {
+      const vocabularyStore = useVocabularyStore.getState();
+      const words = await vocabularyStore.fetchWords(10);
+
+      if (!words || words.length === 0) {
+        throw new Error('No words received from server');
+      }
+      set({ wordsToTranslate: words, isLoadingWords: false });
+    } catch (error) {
+      set({
+        wordsError:
+          error instanceof Error ? error.message : 'Failed to load words',
+        isLoadingWords: false,
+      });
+    }
   },
 
   setInput: (input: string) => set({ input }),
@@ -87,8 +115,8 @@ const useQuizzLogicStore = create<QuizzLogicStore>((set, get) => ({
     const state = get();
     const { answer } = translationTypeMapper(state.variant);
     const currentCorrectAnswer =
-      wordsToTranslate[state.questionNumber]?.[
-        answer as keyof (typeof wordsToTranslate)[0]
+      state.wordsToTranslate[state.questionNumber]?.[
+        answer as keyof (typeof state.wordsToTranslate)[0]
       ];
 
     const isAnswerCorrect = checkAnswer(state.input, currentCorrectAnswer);
@@ -148,8 +176,8 @@ const useQuizzLogicStore = create<QuizzLogicStore>((set, get) => ({
 
   handleNextQuestion: () => {
     const state = get();
-    // TODO replace with wordsToTranslate.length - 1
-    if (state.questionNumber < 2) {
+    const maxQuestionNumber = state.wordsToTranslate.length - 1;
+    if (state.questionNumber < maxQuestionNumber) {
       get().resetQuestion({ newQuestionNumber: state.questionNumber + 1 });
     } else {
       const nextQuestionToReview = state.questionsToReview[0];
@@ -181,6 +209,8 @@ const useQuizzLogicStore = create<QuizzLogicStore>((set, get) => ({
       questionsToReview: [],
       shouldNavigateToSuccessScreen: false,
       feedbackAnswer: '',
+      // Keep wordsToTranslate to avoid unnecessary refetching
+      // Only clear if we want to force a refetch
     });
   },
 }));
