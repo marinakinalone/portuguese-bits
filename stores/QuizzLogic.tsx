@@ -45,6 +45,7 @@ interface QuizzLogicStore {
   handleNextQuestion: () => void;
   resetQuestion: (params: { newQuestionNumber: number }) => void;
   setShouldNavigateToSuccessScreen: (should: boolean) => void;
+  resetQuiz: () => void;
 }
 
 const useQuizzLogicStore = create<QuizzLogicStore>((set, get) => ({
@@ -168,6 +169,19 @@ const useQuizzLogicStore = create<QuizzLogicStore>((set, get) => ({
         });
       }
     }
+  },
+
+  resetQuiz: () => {
+    set({
+      questionNumber: 0,
+      variant: '',
+      input: '',
+      isCorrect: null,
+      result: [],
+      questionsToReview: [],
+      shouldNavigateToSuccessScreen: false,
+      feedbackAnswer: '',
+    });
   },
 }));
 

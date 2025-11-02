@@ -1,8 +1,10 @@
 import { useNavigation } from '@react-navigation/native';
 import React from 'react';
 import { StyleSheet, View } from 'react-native';
+
 import PrimaryButton from '../core/PrimaryButton';
 import { SCREENS } from '@/constants';
+import useQuizzLogicStore from '@/stores/QuizzLogic';
 
 interface INavigationBar {
   destination?: typeof SCREENS.HOME | typeof SCREENS.VOCABULARY;
@@ -14,8 +16,13 @@ const NavigationBar = ({
   label = 'back to home page',
 }: INavigationBar) => {
   const navigation = useNavigation();
+  const { resetQuiz } = useQuizzLogicStore();
 
   const navigateToHomePage = () => {
+    // Reset quiz state when navigating back to home
+    if (destination === SCREENS.HOME) {
+      resetQuiz();
+    }
     navigation.navigate(destination);
   };
 
