@@ -1,3 +1,4 @@
+import { useRouter } from 'expo-router';
 import React from 'react';
 import {
   ActivityIndicator,
@@ -11,6 +12,7 @@ import {
 import CorrectAnswerFeedback from '@/components/AnswerFeedback/Correct';
 import WrongAnswerFeedback from '@/components/AnswerFeedback/Wrong';
 import BackToHome from '@/components/BackToHome';
+import ErrorCard from '@/components/ErrorCard';
 import ProgressCircles from '@/components/ProgressCircles';
 import ReviewBanner from '@/components/ReviewBanner';
 import WordToTranslate from '@/components/WordToTranslate';
@@ -21,6 +23,7 @@ import { useQuizzLogic } from '@/providers/QuizzLogic';
 import theme from '@/theme/defaultTheme';
 
 const QuizzScreen = () => {
+  const router = useRouter();
   const {
     handleCheckAnswer,
     input,
@@ -29,6 +32,7 @@ const QuizzScreen = () => {
     isFinishing,
     pendingSuccess,
     quizError,
+    resetQuizz,
     wordsToTranslate,
   } = useQuizzLogic();
 
@@ -46,12 +50,13 @@ const QuizzScreen = () => {
 
   if (!isLoadingQuiz && (quizError || wordsToTranslate.length === 0)) {
     return (
-      <View style={styles.centered}>
-        <BackToHome />
-        <Text style={styles.error} accessibilityRole="alert">
-          {quizError || 'No quiz words available.'}
-        </Text>
-      </View>
+      <ErrorCard
+        message={quizError || 'No quiz words available.'}
+        onOk={() => {
+          resetQuizz();
+          router.replace('/');
+        }}
+      />
     );
   }
 
@@ -129,11 +134,6 @@ const styles = StyleSheet.create({
     ...theme.fonts.secondary.small,
     marginTop: 16,
     textAlign: 'center',
-  },
-  error: {
-    ...theme.fonts.secondary.small,
-    textAlign: 'center',
-    paddingHorizontal: 24,
   },
   topContent: {
     width: '100%',
