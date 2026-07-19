@@ -20,11 +20,6 @@ import SuccessScreenBackground_2 from '../../assets/backgrounds/success/success_
 import SuccessScreenBackground_3 from '../../assets/backgrounds/success/success_3.jpg';
 import VocabularyScreenBackground from '../../assets/backgrounds/vocabulary.jpg';
 import { SCREENS } from '@/constants';
-import {
-  bottomValue,
-  windowHeight,
-  windowWidth,
-} from '@/utils/windowDimensions';
 
 interface ScreenWrapperProps {
   screen: string;
@@ -95,28 +90,30 @@ const ScreenWrapper: React.FC<ScreenWrapperProps> = ({
       <Image
         source={mapScreenToBackground(screen, questionNumber)}
         style={styles.background}
+        resizeMode="cover"
       />
       {children}
     </View>
   );
 };
 
-// TODO consider sharing with loading screen
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    width: windowWidth,
-    height: windowHeight,
+    width: '100%',
+    height: '100%',
     alignSelf: 'center',
     alignItems: 'center',
+    overflow: 'hidden',
   },
   background: {
     position: 'absolute',
-    bottom: bottomValue,
-    width: windowWidth,
-    maxWidth: 500,
-    maxHeight: windowHeight,
-    flex: 1,
+    top: 0,
+    left: 0,
+    right: 0,
+    bottom: 0,
+    width: '100%',
+    height: '100%',
   },
 });
 

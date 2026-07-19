@@ -5,6 +5,7 @@ import * as SplashScreen from 'expo-splash-screen';
 import { useEffect } from 'react';
 import 'react-native-reanimated';
 import LearnedWordModal from '@/components/LearnedWordModal';
+import PhoneFrame from '@/components/PhoneFrame';
 import { SCREENS } from '@/constants';
 import { AuthProvider, useAuth } from '@/providers/Auth';
 import { LoadingProvider } from '@/providers/Loading';
@@ -61,16 +62,22 @@ export default function RootLayout() {
   }, [loaded]);
 
   if (!loaded) {
-    return <LoadingScreen />;
+    return (
+      <PhoneFrame>
+        <LoadingScreen />
+      </PhoneFrame>
+    );
   }
 
   return (
-    <LoadingProvider>
-      <AuthProvider>
-        <QuizzProvider>
-          <RootNavigator />
-        </QuizzProvider>
-      </AuthProvider>
-    </LoadingProvider>
+    <PhoneFrame>
+      <LoadingProvider>
+        <AuthProvider>
+          <QuizzProvider>
+            <RootNavigator />
+          </QuizzProvider>
+        </AuthProvider>
+      </LoadingProvider>
+    </PhoneFrame>
   );
 }

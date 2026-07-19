@@ -21,7 +21,20 @@ Flower illustrations by [Flower Club](https://www.pinterest.com/flowerclubco/)
 
 ## Deployments
 
-[coming soon](https://...)
+**Web demo (Vercel):** static Expo export (`npx expo export --platform web` → `dist/`).
+
+Set these Production env vars in the Vercel project:
+
+| Variable | Value |
+| -------- | ----- |
+| `EXPO_PUBLIC_API_URL` | Your API base URL (e.g. `https://portuguese-bits-server.vercel.app`) |
+| `EXPO_PUBLIC_DEMO_MODE` | `true` for the public read-only guest demo |
+
+With demo mode on, visitors skip login, can take quizzes and browse vocabulary, but cannot add/edit/delete words, and streaks stay at 0 (no write API calls).
+
+Use Node 24 (see `.nvmrc`). Local full app: keep `EXPO_PUBLIC_DEMO_MODE=false`.
+
+Demo URL: [coming soon](https://...)
 
 ## Built with
 

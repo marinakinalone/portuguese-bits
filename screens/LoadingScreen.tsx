@@ -13,11 +13,6 @@ import loading_09 from '@/assets/loading/loading_09.jpg';
 import loading_10 from '@/assets/loading/loading_10.jpg';
 import loading_11 from '@/assets/loading/loading_11.jpg';
 import loading_12 from '@/assets/loading/loading_12.jpg';
-import {
-  bottomValue,
-  windowHeight,
-  windowWidth,
-} from '@/utils/windowDimensions';
 
 const imageSources = [
   loading_00,
@@ -51,13 +46,11 @@ const LoadingScreen: React.FC = () => {
 
     animate();
 
-    // Listen to the animation value updates
     const listener = animation.addListener(({ value }) => {
       const imageIndex = Math.floor(value);
       setCurrentImage(imageSources[imageIndex]);
     });
 
-    // Clean up listener on component unmount
     return () => {
       animation.removeListener(listener);
     };
@@ -65,7 +58,11 @@ const LoadingScreen: React.FC = () => {
 
   return (
     <View style={styles.container}>
-      <Image style={styles.background} source={currentImage} />
+      <Image
+        style={styles.background}
+        source={currentImage}
+        resizeMode="cover"
+      />
     </View>
   );
 };
@@ -73,19 +70,21 @@ const LoadingScreen: React.FC = () => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    width: windowWidth,
-    height: windowHeight,
+    width: '100%',
+    height: '100%',
     alignSelf: 'center',
     alignItems: 'center',
     justifyContent: 'center',
+    overflow: 'hidden',
   },
   background: {
     position: 'absolute',
-    bottom: bottomValue,
-    width: windowWidth,
-    maxWidth: 500,
-    maxHeight: windowHeight,
-    flex: 1,
+    top: 0,
+    left: 0,
+    right: 0,
+    bottom: 0,
+    width: '100%',
+    height: '100%',
   },
 });
 

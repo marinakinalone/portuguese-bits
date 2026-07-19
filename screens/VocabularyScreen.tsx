@@ -13,7 +13,7 @@ import {
 import BackToHome from '@/components/BackToHome';
 import ErrorCard from '@/components/ErrorCard';
 import PrimaryButton from '@/components/core/PrimaryButton';
-import { PRIMARY_BUTTON_STYLE, SCREENS } from '@/constants';
+import { isDemoMode, PRIMARY_BUTTON_STYLE, SCREENS } from '@/constants';
 import * as vocabApi from '@/services/vocabApi';
 import theme from '@/theme/defaultTheme';
 import type { VocabWord } from '@/types/api';
@@ -65,6 +65,9 @@ const VocabularyScreen: React.FC = () => {
   }, [words, sortMode, frenchFirst]);
 
   const handleAdd = () => {
+    if (isDemoMode) {
+      return;
+    }
     navigation.navigate({
       name: SCREENS.WORD_EDIT,
       params: { mode: 'add' },
@@ -72,6 +75,9 @@ const VocabularyScreen: React.FC = () => {
   };
 
   const handleEdit = (word: VocabWord) => {
+    if (isDemoMode) {
+      return;
+    }
     navigation.navigate({
       name: SCREENS.WORD_EDIT,
       params: {
@@ -132,22 +138,39 @@ const VocabularyScreen: React.FC = () => {
           keyExtractor={(item) => item._id}
           contentContainerStyle={styles.list}
           ListEmptyComponent={
-            <Text style={styles.empty}>No words yet. Add your first word.</Text>
+            <Text style={styles.empty}>
+              {isDemoMode
+                ? 'No words available.'
+                : 'No words yet. Add your first word.'}
+            </Text>
           }
           renderItem={({ item }) => {
             const showLearned =
-              item.isLearned === true && item.excludeFromQuiz === false;
+              !isDemoMode &&
+              item.isLearned === true &&
+              item.excludeFromQuiz === false;
             const left = frenchFirst ? item.fr : item.pt;
             const right = frenchFirst ? item.pt : item.fr;
+            const label = `${left} equals ${right}${
+              showLearned ? ', learned' : ''
+            }`;
+
+            if (isDemoMode) {
+              return (
+                <View style={styles.row} accessible accessibilityLabel={label}>
+                  <Text style={styles.rowText}>
+                    {left.toUpperCase()} = {right.toUpperCase()}
+                  </Text>
+                </View>
+              );
+            }
 
             return (
               <Pressable
                 style={styles.row}
                 onPress={() => handleEdit(item)}
                 accessibilityRole="button"
-                accessibilityLabel={`${left} equals ${right}${
-                  showLearned ? ', learned' : ''
-                }`}>
+                accessibilityLabel={label}>
                 <Text style={styles.rowText}>
                   {left.toUpperCase()} = {right.toUpperCase()}
                 </Text>
@@ -158,13 +181,15 @@ const VocabularyScreen: React.FC = () => {
         />
       )}
 
-      <View style={styles.footerBand}>
-        <PrimaryButton
-          style={PRIMARY_BUTTON_STYLE.ACCENT}
-          handlePress={handleAdd}>
-          ADD A NEW WORD
-        </PrimaryButton>
-      </View>
+      {!isDemoMode ? (
+        <View style={styles.footerBand}>
+          <PrimaryButton
+            style={PRIMARY_BUTTON_STYLE.ACCENT}
+            handlePress={handleAdd}>
+            ADD A NEW WORD
+          </PrimaryButton>
+        </View>
+      ) : null}
 
       <Modal
         visible={sortMenuOpen}

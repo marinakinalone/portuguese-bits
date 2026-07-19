@@ -9,7 +9,13 @@ import React, {
   useRef,
   useState,
 } from 'react';
-import { DELAY_MS, LANGUAGES, QUIZZ_VARIANTS, QuizzVariant } from '@/constants';
+import {
+  DELAY_MS,
+  isDemoMode,
+  LANGUAGES,
+  QUIZZ_VARIANTS,
+  QuizzVariant,
+} from '@/constants';
 import { useAuth } from '@/providers/Auth';
 import * as vocabApi from '@/services/vocabApi';
 import type { ConfirmAction, VocabWord } from '@/types/api';
@@ -201,6 +207,13 @@ export const QuizzProvider: React.FC<{ children: ReactNode }> = ({
     finishingRef.current = true;
     setIsFinishing(true);
 
+    if (isDemoMode) {
+      setCurrentStreak(0);
+      setIsFinishing(false);
+      setPendingSuccess(true);
+      return;
+    }
+
     try {
       const streakResult = await vocabApi.completeQuiz();
       setCurrentStreak(streakResult.quizStreak);
@@ -268,21 +281,23 @@ export const QuizzProvider: React.FC<{ children: ReactNode }> = ({
       return [...prevResult, { questionNumber, isCorrect: isAnswerCorrect }];
     });
 
-    try {
-      const progress = await vocabApi.postProgress(
-        currentWord._id,
-        isAnswerCorrect,
-      );
-      if (progress.newlyLearned) {
-        setLearnedQueue((prev) => {
-          if (prev.some((word) => word._id === progress._id)) {
-            return prev;
-          }
-          return [...prev, { _id: progress._id, pt: progress.pt }];
-        });
+    if (!isDemoMode) {
+      try {
+        const progress = await vocabApi.postProgress(
+          currentWord._id,
+          isAnswerCorrect,
+        );
+        if (progress.newlyLearned) {
+          setLearnedQueue((prev) => {
+            if (prev.some((word) => word._id === progress._id)) {
+              return prev;
+            }
+            return [...prev, { _id: progress._id, pt: progress.pt }];
+          });
+        }
+      } catch {
+        // Keep local UX even if progress fails
       }
-    } catch {
-      // Keep local UX even if progress fails
     }
 
     if (isAnswerCorrect) {
@@ -306,10 +321,12 @@ export const QuizzProvider: React.FC<{ children: ReactNode }> = ({
         return;
       }
 
-      try {
-        await vocabApi.confirmProgress(current._id, action);
-      } catch {
-        // Continue queue even if confirm fails
+      if (!isDemoMode) {
+        try {
+          await vocabApi.confirmProgress(current._id, action);
+        } catch {
+          // Continue queue even if confirm fails
+        }
       }
 
       setLearnedQueue(rest);

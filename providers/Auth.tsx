@@ -8,6 +8,7 @@ import React, {
   useMemo,
   useState,
 } from 'react';
+import { DEMO_GUEST_USER, isDemoMode } from '@/constants';
 import {
   clearStoredToken,
   getStoredToken,
@@ -31,22 +32,37 @@ interface AuthContextProps {
 
 const AuthContext = createContext<AuthContextProps | undefined>(undefined);
 
+const guestProfile = (): UserProfile => ({ ...DEMO_GUEST_USER });
+
 export const AuthProvider: React.FC<{ children: ReactNode }> = ({
   children,
 }) => {
-  const [user, setUser] = useState<UserProfile | null>(null);
+  const [user, setUser] = useState<UserProfile | null>(
+    isDemoMode ? guestProfile() : null,
+  );
   const [token, setToken] = useState<string | null>(null);
   const [isBootstrapping, setIsBootstrapping] = useState(true);
   const router = useRouter();
   const segments = useSegments();
 
   const logout = useCallback(async () => {
+    if (isDemoMode) {
+      setToken(null);
+      setUser(guestProfile());
+      return;
+    }
     await clearStoredToken();
     setToken(null);
     setUser(null);
   }, []);
 
   const refreshProfile = useCallback(async () => {
+    if (isDemoMode) {
+      const guest = guestProfile();
+      setUser(guest);
+      return guest;
+    }
+
     try {
       const profile = await authApi.getMe();
       setUser(profile);
@@ -58,6 +74,11 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({
   }, [logout]);
 
   const login = useCallback(async (username: string, password: string) => {
+    if (isDemoMode) {
+      setUser(guestProfile());
+      return;
+    }
+
     const { token: nextToken } = await authApi.login(username, password);
     await setStoredToken(nextToken);
     setToken(nextToken);
@@ -66,6 +87,11 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({
   }, []);
 
   const register = useCallback(async (username: string, password: string) => {
+    if (isDemoMode) {
+      setUser(guestProfile());
+      return;
+    }
+
     await authApi.register(username, password);
     const { token: nextToken } = await authApi.login(username, password);
     await setStoredToken(nextToken);
@@ -76,6 +102,9 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({
 
   const setQuizStreak = useCallback(
     (quizStreak: number, completedToday = true) => {
+      if (isDemoMode) {
+        return;
+      }
       setUser((prev) =>
         prev
           ? {
@@ -90,6 +119,10 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({
   );
 
   useEffect(() => {
+    if (isDemoMode) {
+      return;
+    }
+
     setUnauthorizedHandler(() => {
       void logout();
     });
@@ -100,6 +133,15 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({
     let cancelled = false;
 
     (async () => {
+      if (isDemoMode) {
+        if (!cancelled) {
+          setUser(guestProfile());
+          setToken(null);
+          setIsBootstrapping(false);
+        }
+        return;
+      }
+
       try {
         const stored = await getStoredToken();
         if (!stored) {
@@ -139,6 +181,13 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({
 
     const onLoginScreen = segments[0] === 'login';
 
+    if (isDemoMode) {
+      if (onLoginScreen) {
+        router.replace('/');
+      }
+      return;
+    }
+
     if (!token && !onLoginScreen) {
       router.replace('/login');
     } else if (token && onLoginScreen) {
@@ -151,7 +200,7 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({
       user,
       token,
       isBootstrapping,
-      isAuthenticated: Boolean(token && user),
+      isAuthenticated: isDemoMode ? Boolean(user) : Boolean(token && user),
       login,
       register,
       logout,

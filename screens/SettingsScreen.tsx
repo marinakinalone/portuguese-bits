@@ -10,7 +10,7 @@ import {
 } from 'react-native';
 import BackToHome from '@/components/BackToHome';
 import PrimaryButton from '@/components/core/PrimaryButton';
-import { PRIMARY_BUTTON_STYLE } from '@/constants';
+import { isDemoMode, PRIMARY_BUTTON_STYLE } from '@/constants';
 import { useAuth } from '@/providers/Auth';
 import theme from '@/theme/defaultTheme';
 import { storageDelete, storageGet, storageSet } from '@/utils/storage';
@@ -180,14 +180,16 @@ const SettingsScreen: React.FC = () => {
           SAVE
         </PrimaryButton>
 
-        <PrimaryButton
-          style={PRIMARY_BUTTON_STYLE.WARNING}
-          fullWidth
-          handlePress={() => {
-            void logout();
-          }}>
-          LOG OUT
-        </PrimaryButton>
+        {!isDemoMode ? (
+          <PrimaryButton
+            style={PRIMARY_BUTTON_STYLE.WARNING}
+            fullWidth
+            handlePress={() => {
+              void logout();
+            }}>
+            LOG OUT
+          </PrimaryButton>
+        ) : null}
       </View>
     </View>
   );

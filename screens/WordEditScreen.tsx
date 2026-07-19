@@ -1,10 +1,10 @@
 import { useLocalSearchParams, useRouter } from 'expo-router';
-import React, { useMemo, useState } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import { StyleSheet, Text, TextInput, View } from 'react-native';
 import BackToHome from '@/components/BackToHome';
 import ErrorCard from '@/components/ErrorCard';
 import PrimaryButton from '@/components/core/PrimaryButton';
-import { PRIMARY_BUTTON_STYLE } from '@/constants';
+import { isDemoMode, PRIMARY_BUTTON_STYLE } from '@/constants';
 import { ApiError } from '@/services/api';
 import * as vocabApi from '@/services/vocabApi';
 import theme from '@/theme/defaultTheme';
@@ -25,9 +25,17 @@ const WordEditScreen: React.FC = () => {
     successStreak?: string;
   }>();
 
+  useEffect(() => {
+    if (isDemoMode) {
+      router.replace('/');
+    }
+  }, [router]);
+
   const isEdit = params.mode === 'edit';
   const originalFr = params.fr || '';
-  const successStreak = Number(params.successStreak ?? 0) || 0;
+  const successStreak = isDemoMode
+    ? 0
+    : Number(params.successStreak ?? 0) || 0;
 
   const [pt, setPt] = useState(params.pt || '');
   const [fr, setFr] = useState(params.fr || '');
@@ -119,6 +127,10 @@ const WordEditScreen: React.FC = () => {
       setIsSubmitting(false);
     }
   };
+
+  if (isDemoMode) {
+    return null;
+  }
 
   if (feedback) {
     return (
