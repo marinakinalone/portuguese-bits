@@ -6,10 +6,12 @@ import { useQuizzLogic } from '@/providers/QuizzLogic';
 import theme from '@/theme/defaultTheme';
 
 const LearnedWordModal: React.FC = () => {
-  const { learnedQueue, confirmLearnedWord, isFinishing } = useQuizzLogic();
+  const { learnedQueue, confirmLearnedWord, isFinishing, pendingSuccess } =
+    useQuizzLogic();
   const [isSubmitting, setIsSubmitting] = useState(false);
   const current = learnedQueue[0];
-  const visible = Boolean(current) && !isFinishing;
+  // Show after finish API when there are newly learned words to confirm.
+  const visible = Boolean(current) && (!isFinishing || pendingSuccess);
 
   useEffect(() => {
     setIsSubmitting(false);

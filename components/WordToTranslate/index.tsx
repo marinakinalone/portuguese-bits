@@ -1,5 +1,11 @@
 import React, { useEffect, useRef, useState } from 'react';
-import { StyleSheet, TextInput, View } from 'react-native';
+import {
+  InteractionManager,
+  Platform,
+  StyleSheet,
+  TextInput,
+  View,
+} from 'react-native';
 import Title from '@/components/core/Title';
 import { useQuizzLogic } from '@/providers/QuizzLogic';
 import theme from '@/theme/defaultTheme';
@@ -11,29 +17,57 @@ const WordToTranslate = () => {
     handleCheckAnswer,
     isCorrect,
     input,
+    isLoadingQuiz,
     isReviewPhase,
+    registerAnswerInputFocus,
     setInput,
     wordToDisplay,
     questionNumber,
   } = useQuizzLogic();
 
+  const canEdit = isCorrect === null && !isLoadingQuiz;
+  const shouldAutofocus = isCorrect === null;
+
   useEffect(() => {
-    if (isCorrect !== null) {
+    registerAnswerInputFocus(() => {
+      inputRef.current?.focus();
+    });
+    return () => registerAnswerInputFocus(null);
+  }, [registerAnswerInputFocus]);
+
+  useEffect(() => {
+    if (!shouldAutofocus) {
       return;
     }
 
-    const timeout = setTimeout(() => {
-      inputRef.current?.focus();
-    }, 100);
+    let cancelled = false;
+    const timeouts: ReturnType<typeof setTimeout>[] = [];
 
-    return () => clearTimeout(timeout);
-  }, [questionNumber, isCorrect]);
+    const focusInput = () => {
+      if (!cancelled) {
+        inputRef.current?.focus();
+      }
+    };
+
+    // Wait for navigation / layout to settle — autofocus during a screen
+    // transition is ignored on mobile, so the keyboard never opens.
+    const task = InteractionManager.runAfterInteractions(() => {
+      const initialDelay = Platform.OS === 'android' ? 350 : 50;
+      timeouts.push(setTimeout(focusInput, initialDelay));
+      timeouts.push(setTimeout(focusInput, initialDelay + 200));
+    });
+
+    return () => {
+      cancelled = true;
+      task.cancel();
+      timeouts.forEach(clearTimeout);
+    };
+  }, [questionNumber, shouldAutofocus, isLoadingQuiz]);
 
   return (
     <View style={[styles.container, isReviewPhase && styles.reviewSpacing]}>
       <Title title={wordToDisplay} />
       <TextInput
-        key={questionNumber}
         ref={inputRef}
         style={[
           styles.input,
@@ -42,9 +76,13 @@ const WordToTranslate = () => {
           isFocused && styles.focusedInput,
         ]}
         value={input}
-        onChangeText={setInput}
+        onChangeText={(text) => {
+          if (canEdit) {
+            setInput(text);
+          }
+        }}
         onSubmitEditing={() => {
-          if (input.trim()) {
+          if (canEdit && input.trim()) {
             handleCheckAnswer();
           }
         }}
@@ -52,10 +90,13 @@ const WordToTranslate = () => {
         onBlur={() => setIsFocused(false)}
         underlineColorAndroid="transparent"
         autoFocus
+        showSoftInputOnFocus
         enablesReturnKeyAutomatically
         keyboardType="default"
         inputMode="text"
-        editable={isCorrect === null}
+        // Keep the field focusable while feedback shows so the keyboard
+        // stays up across auto-advance (editable={false} dismisses it).
+        caretHidden={!canEdit}
         accessibilityLabel={`Translate ${wordToDisplay}`}
         accessibilityHint="Enter the translation and press verify"
       />

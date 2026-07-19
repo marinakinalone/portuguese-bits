@@ -59,6 +59,8 @@ interface QuizzContextProps {
   isReviewPhase: boolean;
   reviewCurrent: number;
   reviewTotal: number;
+  registerAnswerInputFocus: (focus: (() => void) | null) => void;
+  focusAnswerInput: () => void;
 }
 
 const QuizzContext = createContext<QuizzContextProps | undefined>(undefined);
@@ -121,8 +123,20 @@ export const QuizzProvider: React.FC<{ children: ReactNode }> = ({
   const [phase, setPhase] = useState<'quiz' | 'review'>('quiz');
 
   const finishingRef = useRef(false);
+  const answerInputFocusRef = useRef<(() => void) | null>(null);
   const router = useRouter();
   const { setQuizStreak, isAuthenticated } = useAuth();
+
+  const registerAnswerInputFocus = useCallback(
+    (focus: (() => void) | null) => {
+      answerInputFocusRef.current = focus;
+    },
+    [],
+  );
+
+  const focusAnswerInput = useCallback(() => {
+    answerInputFocusRef.current?.();
+  }, []);
 
   const { display, answer } = translationTypeMapper(variant);
 
@@ -209,7 +223,6 @@ export const QuizzProvider: React.FC<{ children: ReactNode }> = ({
 
     if (isDemoMode) {
       setCurrentStreak(0);
-      setIsFinishing(false);
       setPendingSuccess(true);
       return;
     }
@@ -222,7 +235,8 @@ export const QuizzProvider: React.FC<{ children: ReactNode }> = ({
       // Still allow success UI if streak call fails
     }
 
-    setIsFinishing(false);
+    // Keep isFinishing true so the quiz screen stays on the loader until
+    // /success replaces it (clearing flags early causes a quiz UI flicker).
     setPendingSuccess(true);
   }, [setQuizStreak]);
 
@@ -338,12 +352,14 @@ export const QuizzProvider: React.FC<{ children: ReactNode }> = ({
     if (!pendingSuccess) {
       return;
     }
+
+    // Learned-word confirmations happen before success navigation.
     if (learnedQueue.length > 0) {
+      setIsFinishing(false);
       return;
     }
 
     router.replace('/success');
-    setPendingSuccess(false);
   }, [pendingSuccess, learnedQueue.length, router]);
 
   const isReviewPhase = phase === 'review';
@@ -381,11 +397,14 @@ export const QuizzProvider: React.FC<{ children: ReactNode }> = ({
       isReviewPhase,
       reviewCurrent,
       reviewTotal,
+      registerAnswerInputFocus,
+      focusAnswerInput,
     }),
     [
       confirmLearnedWord,
       correctAnswer,
       currentStreak,
+      focusAnswerInput,
       handleCheckAnswer,
       handleNextQuestion,
       input,
@@ -397,6 +416,7 @@ export const QuizzProvider: React.FC<{ children: ReactNode }> = ({
       pendingSuccess,
       questionNumber,
       quizError,
+      registerAnswerInputFocus,
       resetQuizz,
       result,
       reviewCurrent,

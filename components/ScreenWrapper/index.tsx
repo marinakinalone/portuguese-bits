@@ -1,5 +1,5 @@
 import { useNavigation } from 'expo-router/react-navigation';
-import React, { ReactNode, useEffect } from 'react';
+import React, { ReactNode, useEffect, useState } from 'react';
 import { Image, StyleSheet, View } from 'react-native';
 import QuizzScreenBackground_0 from '../../assets/backgrounds/question/flowers_0.jpg';
 import QuizzScreenBackground_1 from '../../assets/backgrounds/question/flowers_1.jpg';
@@ -62,13 +62,14 @@ const screenBackgrounds: { [key: string]: any } = {
 const mapScreenToBackground = (
   screenName: string,
   questionNumber: number = 0,
+  successIndex: number = 0,
 ) => {
   if (screenName === SCREENS.QUIZZ) {
     return quizzBackgrounds[questionNumber % quizzBackgrounds.length];
   }
 
   if (screenName === SCREENS.SUCCESS) {
-    return successBackgrounds[Math.floor(Math.random() * 4)];
+    return successBackgrounds[successIndex % successBackgrounds.length];
   }
 
   return screenBackgrounds[screenName] || StartScreenBackground;
@@ -80,6 +81,10 @@ const ScreenWrapper: React.FC<ScreenWrapperProps> = ({
   children,
 }) => {
   const navigation = useNavigation();
+  // Pick once per mount so success doesn't flicker through random images.
+  const [successIndex] = useState(() =>
+    Math.floor(Math.random() * successBackgrounds.length),
+  );
 
   useEffect(() => {
     navigation.setOptions({ headerShown: false });
@@ -88,7 +93,7 @@ const ScreenWrapper: React.FC<ScreenWrapperProps> = ({
   return (
     <View style={styles.container}>
       <Image
-        source={mapScreenToBackground(screen, questionNumber)}
+        source={mapScreenToBackground(screen, questionNumber, successIndex)}
         style={styles.background}
         resizeMode="cover"
       />

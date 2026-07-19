@@ -25,8 +25,10 @@ const HomeScreen: React.FC = () => {
     }, [refreshProfile, resetQuizz]),
   );
 
-  const handleQuizzPress = async (variant: QuizzVariant) => {
-    await startQuiz(variant);
+  const handleQuizzPress = (variant: QuizzVariant) => {
+    // Start load + navigate in the same tap gesture so mobile browsers
+    // allow autofocus to open the soft keyboard on the quiz screen.
+    void startQuiz(variant);
     navigation.navigate({
       name: SCREENS.QUIZZ,
       params: { variant, questionNumber: 0 },

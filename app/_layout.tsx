@@ -38,7 +38,10 @@ function RootNavigator() {
         <Stack.Screen name={HOME} options={{ title: 'home' }} />
         <Stack.Screen name={LOGIN} options={{ headerShown: false }} />
         <Stack.Screen name={QUIZZ} initialParams={{ questionNumber: 0 }} />
-        <Stack.Screen name={SUCCESS} />
+        <Stack.Screen
+          name={SUCCESS}
+          options={{ animation: 'fade', animationDuration: 200 }}
+        />
         <Stack.Screen name={VOCABULARY} />
         <Stack.Screen name={WORD_EDIT} />
         <Stack.Screen name={SETTINGS} />
