@@ -25,7 +25,7 @@ Flower illustrations by [Flower Club](https://www.pinterest.com/flowerclubco/)
 
 ## Built with
 
-- Bun
+- Node.js 24
 - React Native
 - TypeScript
 
@@ -33,7 +33,7 @@ Flower illustrations by [Flower Club](https://www.pinterest.com/flowerclubco/)
 
 ```bash
 nvm use
-bun install
+npm install
 ```
 
 ## Team

@@ -28,11 +28,18 @@
     },
     "plugins": [
       "expo-router",
+      "expo-secure-store",
+      [
+        "expo-notifications",
+        {
+          "sounds": []
+        }
+      ],
       [
         "expo-font",
         {
           "fonts": [
-            "./assets/fonts/Lato-Regular.ttf",
+            "./assets/fonts/LatoRegular.ttf",
             "./assets/fonts/UchenRegular.ttf"
           ]
         }

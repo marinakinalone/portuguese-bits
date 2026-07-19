@@ -11,6 +11,9 @@ interface IPrimaryButton {
   handlePress: (variant?: QuizzVariant) => void;
   attenuated?: boolean;
   children: React.ReactNode;
+  accessibilityLabel?: string;
+  fullWidth?: boolean;
+  disabled?: boolean;
 }
 
 const PrimaryButton = ({
@@ -18,11 +21,28 @@ const PrimaryButton = ({
   attenuated = false,
   handlePress,
   children,
+  accessibilityLabel,
+  fullWidth = false,
+  disabled = false,
 }: IPrimaryButton) => {
+  const label =
+    accessibilityLabel ||
+    (typeof children === 'string' ? children : 'Button');
+
   return (
     <TouchableOpacity
       onPress={() => handlePress()}
-      style={[styles.button, styles[style]]}>
+      style={[
+        styles.button,
+        fullWidth && styles.fullWidth,
+        styles[style],
+        disabled && styles.disabled,
+      ]}
+      accessibilityRole="button"
+      accessibilityLabel={label}
+      accessibilityState={{ disabled }}
+      disabled={disabled}
+      activeOpacity={0.8}>
       <Text style={[styles.label, attenuated && styles.attenuated]}>
         {children}
       </Text>
@@ -33,12 +53,19 @@ const PrimaryButton = ({
 const styles = StyleSheet.create({
   button: {
     paddingTop: 2,
+    paddingBottom: 2,
     borderRadius: 16,
     marginVertical: 4,
     alignItems: 'center',
+    justifyContent: 'center',
     borderWidth: 1,
-    width: 144,
-    maxWidth: 144,
+    minWidth: 144,
+    minHeight: 44,
+    paddingHorizontal: 16,
+  },
+  fullWidth: {
+    width: '100%',
+    alignSelf: 'stretch',
   },
   label: {
     ...theme.fonts.primary,
@@ -58,6 +85,9 @@ const styles = StyleSheet.create({
   },
   warning: {
     ...theme.palette.warning,
+  },
+  disabled: {
+    opacity: 0.5,
   },
 });
 

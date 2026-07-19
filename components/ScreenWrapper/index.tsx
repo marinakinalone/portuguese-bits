@@ -1,4 +1,4 @@
-import { useNavigation } from '@react-navigation/native';
+import { useNavigation } from 'expo-router/react-navigation';
 import React, { ReactNode, useEffect } from 'react';
 import { Image, StyleSheet, View } from 'react-native';
 import QuizzScreenBackground_0 from '../../assets/backgrounds/question/flowers_0.jpg';
@@ -12,6 +12,8 @@ import QuizzScreenBackground_7 from '../../assets/backgrounds/question/flowers_7
 import QuizzScreenBackground_8 from '../../assets/backgrounds/question/flowers_8.jpg';
 import QuizzScreenBackground_9 from '../../assets/backgrounds/question/flowers_9.jpg';
 import StartScreenBackground from '../../assets/backgrounds/start.jpg';
+import LoginScreenBackground from '../../assets/backgrounds/login.jpg';
+import NotFoundScreenBackground from '../../assets/backgrounds/notfound.jpg';
 import SuccessScreenBackground_0 from '../../assets/backgrounds/success/success_0.jpg';
 import SuccessScreenBackground_1 from '../../assets/backgrounds/success/success_1.jpg';
 import SuccessScreenBackground_2 from '../../assets/backgrounds/success/success_2.jpg';
@@ -53,9 +55,13 @@ const successBackgrounds = [
 
 const screenBackgrounds: { [key: string]: any } = {
   [SCREENS.HOME]: StartScreenBackground,
+  [SCREENS.LOGIN]: LoginScreenBackground,
   [SCREENS.QUIZZ]: quizzBackgrounds,
   [SCREENS.VOCABULARY]: VocabularyScreenBackground,
+  [SCREENS.WORD_EDIT]: VocabularyScreenBackground,
+  [SCREENS.SETTINGS]: StartScreenBackground,
   [SCREENS.SUCCESS]: successBackgrounds,
+  [SCREENS.NOT_FOUND]: NotFoundScreenBackground,
 };
 
 const mapScreenToBackground = (

@@ -12,4 +12,4 @@ type QuizzVariantsType = typeof QUIZZ_VARIANTS;
 
 export type QuizzVariant = QuizzVariantsType[keyof QuizzVariantsType];
 
-export const DELAY_MS = 1500;
+export const DELAY_MS = 800;

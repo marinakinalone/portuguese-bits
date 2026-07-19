@@ -8,8 +8,14 @@ interface ISecondaryButton {
 }
 
 const SecondaryButton = ({ handlePress, children }: ISecondaryButton) => {
+  const label = typeof children === 'string' ? children : 'Button';
+
   return (
-    <TouchableOpacity style={styles.button} onPress={handlePress}>
+    <TouchableOpacity
+      style={styles.button}
+      onPress={handlePress}
+      accessibilityRole="button"
+      accessibilityLabel={label}>
       <Text style={styles.text}>{children}</Text>
     </TouchableOpacity>
   );
@@ -18,6 +24,8 @@ const SecondaryButton = ({ handlePress, children }: ISecondaryButton) => {
 const styles = StyleSheet.create({
   button: {
     padding: 8,
+    minHeight: 44,
+    justifyContent: 'center',
   },
   text: {
     textDecorationLine: 'underline',

@@ -1,12 +1,207 @@
-import React from 'react';
-import { Link } from 'expo-router';
-import { View, Text, StyleSheet } from 'react-native';
+import { Ionicons } from '@expo/vector-icons';
+import { useFocusEffect, useNavigation } from 'expo-router/react-navigation';
+import React, { useCallback, useMemo, useState } from 'react';
+import {
+  ActivityIndicator,
+  FlatList,
+  Modal,
+  Pressable,
+  StyleSheet,
+  Text,
+  View,
+} from 'react-native';
+import BackToHome from '@/components/BackToHome';
+import ErrorCard from '@/components/ErrorCard';
+import PrimaryButton from '@/components/core/PrimaryButton';
+import { PRIMARY_BUTTON_STYLE, SCREENS } from '@/constants';
+import * as vocabApi from '@/services/vocabApi';
+import theme from '@/theme/defaultTheme';
+import type { VocabWord } from '@/types/api';
 
-const VocabularyScreen: React.FC = ({}) => {
+type SortMode = 'alphabetical' | 'oldest';
+
+const VocabularyScreen: React.FC = () => {
+  const navigation = useNavigation();
+  const [words, setWords] = useState<VocabWord[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+  const [frenchFirst, setFrenchFirst] = useState(false);
+  const [sortMode, setSortMode] = useState<SortMode>('alphabetical');
+  const [sortMenuOpen, setSortMenuOpen] = useState(false);
+
+  const loadWords = useCallback(async () => {
+    setIsLoading(true);
+    setError(null);
+    try {
+      const data = await vocabApi.getVocab();
+      setWords(data);
+    } catch (err) {
+      setError(
+        err instanceof Error ? err.message : 'Failed to load vocabulary',
+      );
+    } finally {
+      setIsLoading(false);
+    }
+  }, []);
+
+  useFocusEffect(
+    useCallback(() => {
+      void loadWords();
+    }, [loadWords]),
+  );
+
+  const sortedWords = useMemo(() => {
+    const copy = [...words];
+    if (sortMode === 'alphabetical') {
+      const key = frenchFirst ? 'fr' : 'pt';
+      copy.sort((a, b) =>
+        a[key].localeCompare(b[key], undefined, { sensitivity: 'base' }),
+      );
+    } else {
+      // MongoDB ObjectId encodes creation time — ascending = oldest first
+      copy.sort((a, b) => a._id.localeCompare(b._id));
+    }
+    return copy;
+  }, [words, sortMode, frenchFirst]);
+
+  const handleAdd = () => {
+    navigation.navigate({
+      name: SCREENS.WORD_EDIT,
+      params: { mode: 'add' },
+    });
+  };
+
+  const handleEdit = (word: VocabWord) => {
+    navigation.navigate({
+      name: SCREENS.WORD_EDIT,
+      params: {
+        mode: 'edit',
+        fr: word.fr,
+        pt: word.pt,
+        successStreak: word.successStreak ?? 0,
+      },
+    });
+  };
+
+  const selectSort = (mode: SortMode) => {
+    setSortMode(mode);
+    setSortMenuOpen(false);
+  };
+
+  const headerLabel = frenchFirst ? 'FR | PT' : 'PT | FR';
+
   return (
     <View style={styles.container}>
-      <Text>Vocabulary Screen</Text>
-      <Link href={{ pathname: '/' }}>Go to Home</Link>
+      <BackToHome />
+
+      <View style={styles.headerBand}>
+        <Pressable
+          onPress={() => setFrenchFirst((prev) => !prev)}
+          style={styles.headerButton}
+          accessibilityRole="button"
+          accessibilityLabel={`Display order ${headerLabel}. Tap to swap.`}
+          accessibilityHint="Swaps which language appears first in the list">
+          <Text style={styles.headerText}>{headerLabel}</Text>
+        </Pressable>
+        <Pressable
+          onPress={() => setSortMenuOpen(true)}
+          style={styles.sortButton}
+          accessibilityRole="button"
+          accessibilityLabel="Sort vocabulary list"
+          accessibilityHint="Opens sort options"
+          hitSlop={8}>
+          <Ionicons
+            name="swap-vertical-outline"
+            size={22}
+            color={theme.colors.midnight}
+          />
+        </Pressable>
+      </View>
+
+      {isLoading ? (
+        <ActivityIndicator
+          color={theme.colors.midnight}
+          style={styles.loader}
+          accessibilityLabel="Loading vocabulary"
+        />
+      ) : error ? (
+        <ErrorCard message={error} onOk={() => setError(null)} />
+      ) : (
+        <FlatList
+          data={sortedWords}
+          keyExtractor={(item) => item._id}
+          contentContainerStyle={styles.list}
+          ListEmptyComponent={
+            <Text style={styles.empty}>No words yet. Add your first word.</Text>
+          }
+          renderItem={({ item }) => {
+            const showLearned =
+              item.isLearned === true && item.excludeFromQuiz === false;
+            const left = frenchFirst ? item.fr : item.pt;
+            const right = frenchFirst ? item.pt : item.fr;
+
+            return (
+              <Pressable
+                style={styles.row}
+                onPress={() => handleEdit(item)}
+                accessibilityRole="button"
+                accessibilityLabel={`${left} equals ${right}${
+                  showLearned ? ', learned' : ''
+                }`}>
+                <Text style={styles.rowText}>
+                  {left.toUpperCase()} = {right.toUpperCase()}
+                </Text>
+                {showLearned ? <Text style={styles.badge}>learned</Text> : null}
+              </Pressable>
+            );
+          }}
+        />
+      )}
+
+      <View style={styles.footerBand}>
+        <PrimaryButton
+          style={PRIMARY_BUTTON_STYLE.ACCENT}
+          handlePress={handleAdd}>
+          ADD A NEW WORD
+        </PrimaryButton>
+      </View>
+
+      <Modal
+        visible={sortMenuOpen}
+        transparent
+        animationType="fade"
+        onRequestClose={() => setSortMenuOpen(false)}>
+        <Pressable
+          style={styles.menuOverlay}
+          onPress={() => setSortMenuOpen(false)}
+          accessibilityLabel="Close sort menu">
+          <View style={styles.menuCard}>
+            <Text style={styles.menuTitle}>Sort by</Text>
+            <Pressable
+              style={[
+                styles.menuOption,
+                sortMode === 'alphabetical' && styles.menuOptionActive,
+              ]}
+              onPress={() => selectSort('alphabetical')}
+              accessibilityRole="button"
+              accessibilityState={{ selected: sortMode === 'alphabetical' }}
+              accessibilityLabel="Alphabetical order">
+              <Text style={styles.menuOptionText}>Alphabetical</Text>
+            </Pressable>
+            <Pressable
+              style={[
+                styles.menuOption,
+                sortMode === 'oldest' && styles.menuOptionActive,
+              ]}
+              onPress={() => selectSort('oldest')}
+              accessibilityRole="button"
+              accessibilityState={{ selected: sortMode === 'oldest' }}
+              accessibilityLabel="Oldest to most recent">
+              <Text style={styles.menuOptionText}>Oldest to most recent</Text>
+            </Pressable>
+          </View>
+        </Pressable>
+      </Modal>
     </View>
   );
 };
@@ -14,8 +209,125 @@ const VocabularyScreen: React.FC = ({}) => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    justifyContent: 'center',
+    width: '100%',
+  },
+  sortButton: {
+    position: 'absolute',
+    right: 16,
+    bottom: 6,
+    backgroundColor: theme.colors.linen,
+    borderWidth: 1,
+    borderColor: theme.colors.midnight,
+    borderRadius: 12,
+    width: 44,
+    height: 44,
     alignItems: 'center',
+    justifyContent: 'center',
+  },
+  headerBand: {
+    position: 'relative',
+    borderBottomWidth: 3,
+    borderBottomColor: theme.colors.pistachio,
+    paddingVertical: 10,
+    marginTop: 8,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  headerButton: {
+    paddingHorizontal: 16,
+    paddingVertical: 4,
+    minHeight: 44,
+    justifyContent: 'center',
+  },
+  headerText: {
+    fontFamily: theme.fonts.primary.fontFamily,
+    ...theme.fonts.primary.large,
+    textAlign: 'center',
+  },
+  list: {
+    paddingHorizontal: 20,
+    paddingBottom: 12,
+    paddingTop: 8,
+    flexGrow: 1,
+    backgroundColor: 'rgba(244, 231, 212, 0.72)',
+  },
+  row: {
+    backgroundColor: theme.colors.linen,
+    borderRadius: 20,
+    borderWidth: 1,
+    borderColor: theme.colors.midnight,
+    paddingVertical: 10,
+    paddingHorizontal: 16,
+    minHeight: 44,
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    marginBottom: 3,
+  },
+  rowText: {
+    ...theme.fonts.secondary.small,
+    flex: 1,
+  },
+  badge: {
+    ...theme.fonts.secondary.extraSmall,
+    backgroundColor: theme.colors.pistachio,
+    borderRadius: 8,
+    paddingHorizontal: 8,
+    paddingVertical: 4,
+    marginLeft: 8,
+    overflow: 'hidden',
+  },
+  footerBand: {
+    borderTopWidth: 3,
+    borderTopColor: theme.colors.pistachio,
+    paddingVertical: 12,
+    paddingHorizontal: 16,
+    alignItems: 'center',
+  },
+  loader: {
+    flex: 1,
+    marginTop: 40,
+  },
+  empty: {
+    ...theme.fonts.secondary.small,
+    textAlign: 'center',
+    marginTop: 24,
+  },
+  menuOverlay: {
+    flex: 1,
+    backgroundColor: 'rgba(30, 30, 30, 0.35)',
+    justifyContent: 'flex-start',
+    alignItems: 'flex-end',
+    paddingTop: 100,
+    paddingRight: 16,
+  },
+  menuCard: {
+    backgroundColor: theme.colors.linen,
+    borderRadius: 16,
+    borderWidth: 1,
+    borderColor: theme.colors.midnight,
+    padding: 12,
+    minWidth: 220,
+    gap: 4,
+  },
+  menuTitle: {
+    fontFamily: theme.fonts.primary.fontFamily,
+    ...theme.fonts.primary.mediumSmall,
+    marginBottom: 4,
+    paddingHorizontal: 8,
+  },
+  menuOption: {
+    paddingVertical: 12,
+    paddingHorizontal: 12,
+    borderRadius: 12,
+    minHeight: 44,
+    justifyContent: 'center',
+  },
+  menuOptionActive: {
+    backgroundColor: theme.colors.pistachio,
+  },
+  menuOptionText: {
+    ...theme.fonts.secondary.small,
   },
 });
 
