@@ -99,10 +99,13 @@ type UserProfile = {
 | ------ | ----------------------- | -------- | ----------------------------- |
 | GET    | `/vocab`                | Optional | `VocabWord[]`                 |
 | GET    | `/vocab/:numberOfWords` | Optional | `VocabWord[]` (random sample) |
+| GET    | `/vocab/demo`           | No       | `VocabWord[]` (fixed demo set)|
 
 When authenticated, each word includes progress fields. Unauthenticated responses only include `_id`, `pt`, `fr`.
 
 `GET /vocab/:numberOfWords` excludes words where the user chose **remove** after learning (`excludeFromQuiz: true`). May return fewer words than requested if the pool is small.
+
+`GET /vocab/demo` returns a curated public demo list (`_id`, `pt`, `fr` only). Register this route **before** `/vocab/:numberOfWords` so `"demo"` is not treated as a count. The demo frontend samples quiz words client-side from this list.
 
 ### CRUD (admin)
 

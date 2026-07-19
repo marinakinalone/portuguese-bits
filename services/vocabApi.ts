@@ -1,3 +1,4 @@
+import { isDemoMode } from '@/constants';
 import { apiRequest } from '@/services/api';
 import type {
   ConfirmAction,
@@ -8,11 +9,28 @@ import type {
   WordProgress,
 } from '@/types/api';
 
+function shuffleSample<T>(items: T[], count: number): T[] {
+  const copy = [...items];
+  for (let i = copy.length - 1; i > 0; i -= 1) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [copy[i], copy[j]] = [copy[j], copy[i]];
+  }
+  return copy.slice(0, Math.min(count, copy.length));
+}
+
+/** Full vocab list (or curated demo list when EXPO_PUBLIC_DEMO_MODE=true). */
 export function getVocab() {
+  if (isDemoMode) {
+    return apiRequest<VocabWord[]>('/vocab/demo');
+  }
   return apiRequest<VocabWord[]>('/vocab');
 }
 
-export function getQuizWords(count = 10) {
+export async function getQuizWords(count = 10) {
+  if (isDemoMode) {
+    const demoWords = await apiRequest<VocabWord[]>('/vocab/demo');
+    return shuffleSample(demoWords, count);
+  }
   return apiRequest<VocabWord[]>(`/vocab/${count}`);
 }
 
