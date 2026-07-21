@@ -2,12 +2,15 @@ const { withEntitlementsPlist } = require('expo/config-plugins');
 
 /**
  * Personal Apple Development teams cannot use Push Notifications.
- * This app only schedules local reminders, so strip the APNS entitlement
- * that expo-notifications adds by default.
+ * Strip APNS if any plugin adds it. Local scheduled reminders do not need it.
  */
-module.exports = function withRemovePushEntitlement(config) {
+function withRemovePushEntitlement(config) {
   return withEntitlementsPlist(config, (config) => {
-    delete config.modResults['aps-environment'];
+    if ('aps-environment' in config.modResults) {
+      delete config.modResults['aps-environment'];
+    }
     return config;
   });
-};
+}
+
+module.exports = withRemovePushEntitlement;

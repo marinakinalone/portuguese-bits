@@ -13,9 +13,11 @@
       "backgroundColor": "#ffffff"
     },
     "ios": {
-      "supportsTablet": true
+      "supportsTablet": true,
+      "bundleIdentifier": "com.portuguesebits.app"
     },
     "android": {
+      "package": "com.portuguesebits.app",
       "adaptiveIcon": {
         "foregroundImage": "./assets/adaptive-icon.png",
         "backgroundColor": "#ffffff"
@@ -30,13 +32,6 @@
       "expo-router",
       "expo-secure-store",
       [
-        "expo-notifications",
-        {
-          "sounds": []
-        }
-      ],
-      "./plugins/withRemovePushEntitlement.js",
-      [
         "expo-font",
         {
           "fonts": [
@@ -44,7 +39,8 @@
             "./assets/fonts/UchenRegular.ttf"
           ]
         }
-      ]
+      ],
+      "./plugins/withRemovePushEntitlement.js"
     ],
     "experiments": {
       "typedRoutes": true
