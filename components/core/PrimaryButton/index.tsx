@@ -68,8 +68,9 @@ const styles = StyleSheet.create({
     alignSelf: 'stretch',
   },
   label: {
-    ...theme.fonts.primary,
+    fontFamily: theme.fonts.primary.fontFamily,
     ...theme.fonts.primary.mediumSmall,
+    textAlign: 'center',
   },
   default: {
     ...theme.palette.primary,
