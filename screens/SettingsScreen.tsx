@@ -214,10 +214,11 @@ const styles = StyleSheet.create({
     borderColor: theme.colors.midnight,
     padding: 20,
     gap: 12,
-    alignItems: 'center',
+    alignItems: 'stretch',
   },
   row: {
     width: '100%',
+    alignSelf: 'stretch',
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
@@ -227,11 +228,13 @@ const styles = StyleSheet.create({
   },
   hint: {
     ...theme.fonts.secondary.extraSmall,
-    alignSelf: 'flex-start',
+    alignSelf: 'stretch',
   },
   timeRow: {
     flexDirection: 'row',
     alignItems: 'center',
+    justifyContent: 'center',
+    alignSelf: 'stretch',
   },
   timeInput: {
     width: 64,
@@ -242,6 +245,8 @@ const styles = StyleSheet.create({
     backgroundColor: theme.colors.cloud,
     textAlign: 'center',
     color: theme.colors.midnight,
+    fontFamily: theme.fonts.secondary.fontFamily,
+    fontSize: theme.fonts.secondary.small.fontSize,
   },
   colon: {
     ...theme.fonts.secondary.medium,

@@ -44,16 +44,19 @@ const styles = StyleSheet.create({
   },
   topContainer: {
     flex: 1,
-    alignItems: 'center',
+    width: '100%',
+    alignItems: 'stretch',
   },
   centerContainer: {
     flex: 1,
+    width: '100%',
     justifyContent: 'center',
-    alignItems: 'center',
+    alignItems: 'stretch',
   },
   bottomContainer: {
     flex: 1,
-    alignItems: 'center',
+    width: '100%',
+    alignItems: 'stretch',
     justifyContent: 'center',
   },
 });

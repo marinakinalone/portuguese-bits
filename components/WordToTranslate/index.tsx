@@ -106,8 +106,8 @@ const WordToTranslate = () => {
 
 const styles = StyleSheet.create({
   container: {
-    alignItems: 'center',
     width: '100%',
+    alignItems: 'stretch',
   },
   reviewSpacing: {
     marginTop: 16,
@@ -119,9 +119,13 @@ const styles = StyleSheet.create({
     marginTop: 24,
     marginBottom: 40,
     paddingHorizontal: 24,
+    paddingVertical: 12,
     width: '80%',
+    alignSelf: 'center',
     ...theme.palette.input.default,
     borderColor: theme.colors.midnight,
+    fontFamily: theme.fonts.secondary.fontFamily,
+    fontSize: theme.fonts.secondary.small.fontSize,
   },
   correctInput: {
     ...theme.palette.input.correct,
