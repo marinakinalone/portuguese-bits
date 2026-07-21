@@ -67,39 +67,41 @@ const WordToTranslate = () => {
   return (
     <View style={[styles.container, isReviewPhase && styles.reviewSpacing]}>
       <Title title={wordToDisplay} />
-      <TextInput
-        ref={inputRef}
-        style={[
-          styles.input,
-          isCorrect === true && styles.correctInput,
-          isCorrect === false && styles.incorrectInput,
-          isFocused && styles.focusedInput,
-        ]}
-        value={input}
-        onChangeText={(text) => {
-          if (canEdit) {
-            setInput(text);
-          }
-        }}
-        onSubmitEditing={() => {
-          if (canEdit && input.trim()) {
-            handleCheckAnswer();
-          }
-        }}
-        onFocus={() => setIsFocused(true)}
-        onBlur={() => setIsFocused(false)}
-        underlineColorAndroid="transparent"
-        autoFocus
-        showSoftInputOnFocus
-        enablesReturnKeyAutomatically
-        keyboardType="default"
-        inputMode="text"
-        // Keep the field focusable while feedback shows so the keyboard
-        // stays up across auto-advance (editable={false} dismisses it).
-        caretHidden={!canEdit}
-        accessibilityLabel={`Translate ${wordToDisplay}`}
-        accessibilityHint="Enter the translation and press verify"
-      />
+      <View style={styles.inputField}>
+        <TextInput
+          ref={inputRef}
+          style={[
+            styles.input,
+            isCorrect === true && styles.correctInput,
+            isCorrect === false && styles.incorrectInput,
+            isFocused && styles.focusedInput,
+          ]}
+          value={input}
+          onChangeText={(text) => {
+            if (canEdit) {
+              setInput(text);
+            }
+          }}
+          onSubmitEditing={() => {
+            if (canEdit && input.trim()) {
+              handleCheckAnswer();
+            }
+          }}
+          onFocus={() => setIsFocused(true)}
+          onBlur={() => setIsFocused(false)}
+          underlineColorAndroid="transparent"
+          autoFocus
+          showSoftInputOnFocus
+          enablesReturnKeyAutomatically
+          keyboardType="default"
+          inputMode="text"
+          // Keep the field focusable while feedback shows so the keyboard
+          // stays up across auto-advance (editable={false} dismisses it).
+          caretHidden={!canEdit}
+          accessibilityLabel={`Translate ${wordToDisplay}`}
+          accessibilityHint="Enter the translation and press verify"
+        />
+      </View>
     </View>
   );
 };
@@ -107,21 +109,25 @@ const WordToTranslate = () => {
 const styles = StyleSheet.create({
   container: {
     width: '100%',
+    alignSelf: 'stretch',
     alignItems: 'stretch',
   },
   reviewSpacing: {
     marginTop: 16,
   },
+  inputField: {
+    width: '80%',
+    alignSelf: 'center',
+    marginTop: 24,
+    marginBottom: 40,
+  },
   input: {
+    width: '100%',
     height: 56,
     borderRadius: 40,
     borderWidth: 1,
-    marginTop: 24,
-    marginBottom: 40,
     paddingHorizontal: 24,
     paddingVertical: 12,
-    width: '80%',
-    alignSelf: 'center',
     ...theme.palette.input.default,
     borderColor: theme.colors.midnight,
     fontFamily: theme.fonts.secondary.fontFamily,

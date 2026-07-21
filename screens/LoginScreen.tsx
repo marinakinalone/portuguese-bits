@@ -67,34 +67,37 @@ const LoginScreen: React.FC = () => {
           <Text nativeID="usernameLabel" style={styles.label}>
             Username
           </Text>
-          <TextInput
-            style={styles.input}
-            value={username}
-            onChangeText={setUsername}
-            autoCapitalize="none"
-            autoCorrect={false}
-            autoFocus
-            accessibilityLabel="Username"
-            accessibilityLabelledBy="usernameLabel"
-            returnKeyType="next"
-          />
+          <View style={styles.inputField}>
+            <TextInput
+              style={styles.input}
+              value={username}
+              onChangeText={setUsername}
+              autoCapitalize="none"
+              autoCorrect={false}
+              autoFocus
+              accessibilityLabel="Username"
+              accessibilityLabelledBy="usernameLabel"
+              returnKeyType="next"
+            />
+          </View>
 
           <Text nativeID="passwordLabel" style={styles.label}>
             Password
           </Text>
-          <TextInput
-            style={styles.input}
-            value={password}
-            onChangeText={setPassword}
-            secureTextEntry
-            accessibilityLabel="Password"
-            accessibilityLabelledBy="passwordLabel"
-            returnKeyType="done"
-            onSubmitEditing={() => {
-              void handleSubmit();
-            }}
-          />
-
+          <View style={styles.inputField}>
+            <TextInput
+              style={styles.input}
+              value={password}
+              onChangeText={setPassword}
+              secureTextEntry
+              accessibilityLabel="Password"
+              accessibilityLabelledBy="passwordLabel"
+              returnKeyType="done"
+              onSubmitEditing={() => {
+                void handleSubmit();
+              }}
+            />
+          </View>
           {error ? (
             <Text style={styles.error} accessibilityRole="alert">
               {error}
@@ -136,19 +139,20 @@ const LoginScreen: React.FC = () => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    alignItems: 'center',
+    width: '100%',
+    alignSelf: 'stretch',
     paddingHorizontal: 24,
     paddingTop: 56,
   },
   card: {
     width: '100%',
     maxWidth: 360,
+    alignSelf: 'center',
     backgroundColor: theme.colors.linen,
     borderRadius: 24,
     borderWidth: 2,
     borderColor: theme.colors.midnight,
     padding: 24,
-    // stretch (not center): on iOS, width:'100%' TextInputs collapse inside centered parents
     alignItems: 'stretch',
     gap: 8,
     marginTop: 24,
@@ -157,6 +161,7 @@ const styles = StyleSheet.create({
     fontFamily: theme.fonts.primary.fontFamily,
     ...theme.fonts.primary.large,
     textAlign: 'center',
+    alignSelf: 'stretch',
   },
   subtitle: {
     ...theme.fonts.secondary.extraSmall,
@@ -167,8 +172,11 @@ const styles = StyleSheet.create({
     ...theme.fonts.secondary.extraSmall,
     marginTop: 4,
   },
-  input: {
+  inputField: {
     alignSelf: 'stretch',
+    width: '100%',
+  },
+  input: {
     width: '100%',
     minHeight: 48,
     borderRadius: 16,

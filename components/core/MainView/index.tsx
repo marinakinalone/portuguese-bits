@@ -35,6 +35,7 @@ const styles = StyleSheet.create({
     marginTop: 160,
     borderWidth: 1,
     borderRadius: 32,
+    alignSelf: 'center',
   },
   default: {
     ...theme.palette.primary,

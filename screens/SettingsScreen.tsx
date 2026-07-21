@@ -199,15 +199,19 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     width: '100%',
-    alignItems: 'center',
+    alignSelf: 'stretch',
+    alignItems: 'stretch',
   },
   title: {
     fontFamily: theme.fonts.primary.fontFamily,
     ...theme.fonts.primary.mediumLarge,
     marginVertical: 24,
+    textAlign: 'center',
   },
   card: {
     width: '86%',
+    maxWidth: 360,
+    alignSelf: 'center',
     backgroundColor: theme.colors.linen,
     borderRadius: 24,
     borderWidth: 2,

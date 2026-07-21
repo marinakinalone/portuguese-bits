@@ -251,7 +251,8 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     width: '100%',
-    alignItems: 'center',
+    alignSelf: 'stretch',
+    alignItems: 'stretch',
     paddingHorizontal: 24,
   },
   contentColumn: {

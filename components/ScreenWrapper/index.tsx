@@ -107,8 +107,9 @@ const styles = StyleSheet.create({
     flex: 1,
     width: '100%',
     height: '100%',
-    alignSelf: 'center',
-    alignItems: 'center',
+    alignSelf: 'stretch',
+    // stretch — not center: on iOS, percentage widths collapse inside centered parents
+    alignItems: 'stretch',
     overflow: 'hidden',
   },
   background: {
