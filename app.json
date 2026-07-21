@@ -40,7 +40,8 @@
           ]
         }
       ],
-      "./plugins/withRemovePushEntitlement.js"
+      "./plugins/withRemovePushEntitlement.js",
+      "./plugins/withPatchExpoModulesJsiDate.js"
     ],
     "experiments": {
       "typedRoutes": true
