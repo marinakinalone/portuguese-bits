@@ -1,6 +1,6 @@
 import { Ionicons } from '@expo/vector-icons';
 import { useFocusEffect, useNavigation } from 'expo-router/react-navigation';
-import React, { useCallback, useMemo, useState } from 'react';
+import React, { useCallback, useMemo, useRef, useState } from 'react';
 import {
   ActivityIndicator,
   FlatList,
@@ -23,24 +23,42 @@ type SortMode = 'alphabetical' | 'oldest';
 const VocabularyScreen: React.FC = () => {
   const navigation = useNavigation();
   const [words, setWords] = useState<VocabWord[]>([]);
-  const [isLoading, setIsLoading] = useState(true);
+  const [isInitialLoading, setIsInitialLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [frenchFirst, setFrenchFirst] = useState(false);
   const [sortMode, setSortMode] = useState<SortMode>('alphabetical');
   const [sortMenuOpen, setSortMenuOpen] = useState(false);
+  const requestIdRef = useRef(0);
+  const hasLoadedRef = useRef(false);
 
   const loadWords = useCallback(async () => {
-    setIsLoading(true);
+    const requestId = ++requestIdRef.current;
+    // Only blank the list on the first fetch — keep existing rows visible on refocus.
+    if (!hasLoadedRef.current) {
+      setIsInitialLoading(true);
+    }
     setError(null);
     try {
       const data = await vocabApi.getVocab();
+      if (requestId !== requestIdRef.current) {
+        return;
+      }
       setWords(data);
+      hasLoadedRef.current = true;
     } catch (err) {
-      setError(
-        err instanceof Error ? err.message : 'Failed to load vocabulary',
-      );
+      if (requestId !== requestIdRef.current) {
+        return;
+      }
+      // Keep the existing list if a background refresh fails.
+      if (!hasLoadedRef.current) {
+        setError(
+          err instanceof Error ? err.message : 'Failed to load vocabulary',
+        );
+      }
     } finally {
-      setIsLoading(false);
+      if (requestId === requestIdRef.current) {
+        setIsInitialLoading(false);
+      }
     }
   }, []);
 
@@ -124,12 +142,14 @@ const VocabularyScreen: React.FC = () => {
         </Pressable>
       </View>
 
-      {isLoading ? (
-        <ActivityIndicator
-          color={theme.colors.midnight}
+      {isInitialLoading ? (
+        <View
           style={styles.loader}
-          accessibilityLabel="Loading vocabulary"
-        />
+          accessibilityRole="progressbar"
+          accessibilityLabel="Loading vocabulary">
+          <ActivityIndicator color={theme.colors.midnight} size="large" />
+          <Text style={styles.loaderText}>Loading vocabulary…</Text>
+        </View>
       ) : error ? (
         <ErrorCard message={error} onOk={() => setError(null)} />
       ) : (
@@ -311,7 +331,13 @@ const styles = StyleSheet.create({
   },
   loader: {
     flex: 1,
-    marginTop: 40,
+    alignItems: 'center',
+    justifyContent: 'center',
+    gap: 12,
+  },
+  loaderText: {
+    ...theme.fonts.secondary.small,
+    color: theme.colors.midnight,
   },
   empty: {
     ...theme.fonts.secondary.small,

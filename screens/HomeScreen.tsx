@@ -2,6 +2,7 @@ import { Ionicons } from '@expo/vector-icons';
 import { useFocusEffect, useNavigation } from 'expo-router/react-navigation';
 import React, { useCallback } from 'react';
 import { Linking, Pressable, StyleSheet, Text, View } from 'react-native';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import PrimaryButton from '@/components/core/PrimaryButton';
 import {
   PRIMARY_BUTTON_STYLE,
@@ -15,6 +16,7 @@ import theme from '@/theme/defaultTheme';
 
 const HomeScreen: React.FC = () => {
   const navigation = useNavigation();
+  const insets = useSafeAreaInsets();
   const { user, refreshProfile } = useAuth();
   const { startQuiz, resetQuizz } = useQuizzLogic();
 
@@ -53,7 +55,7 @@ const HomeScreen: React.FC = () => {
     <View style={styles.container}>
       <Pressable
         onPress={handleSettingsPress}
-        style={styles.settingsButton}
+        style={[styles.settingsButton, { top: insets.top + 8 }]}
         accessibilityRole="button"
         accessibilityLabel="Settings"
         hitSlop={8}>
@@ -64,7 +66,7 @@ const HomeScreen: React.FC = () => {
         />
       </Pressable>
 
-      <View style={styles.header}>
+      <View style={[styles.header, { paddingTop: insets.top + 24 }]}>
         <Text style={styles.title} accessibilityRole="header">
           Portuguese Bits
         </Text>
@@ -86,7 +88,11 @@ const HomeScreen: React.FC = () => {
         </Text>
       </View>
 
-      <View style={styles.buttonStack}>
+      <View
+        style={[
+          styles.buttonStack,
+          { paddingBottom: Math.max(insets.bottom, 8) },
+        ]}>
         <PrimaryButton
           style={PRIMARY_BUTTON_STYLE.DEFAULT}
           handlePress={() => {
@@ -119,7 +125,6 @@ const styles = StyleSheet.create({
   },
   settingsButton: {
     position: 'absolute',
-    top: 8,
     right: 16,
     zIndex: 1,
     backgroundColor: theme.colors.linen,
@@ -132,7 +137,6 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
   },
   header: {
-    paddingTop: 24,
     alignItems: 'center',
     flex: 1,
   },
@@ -154,7 +158,6 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     flex: 1,
     justifyContent: 'flex-end',
-    paddingBottom: 8,
   },
 });
 

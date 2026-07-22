@@ -1,6 +1,7 @@
 import { useRouter } from 'expo-router';
 import React from 'react';
 import { Pressable, StyleSheet, Text, ViewStyle } from 'react-native';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { useQuizzLogic } from '@/providers/QuizzLogic';
 import theme from '@/theme/defaultTheme';
 
@@ -18,6 +19,7 @@ const BackToHome = ({
   style,
 }: BackToHomeProps) => {
   const router = useRouter();
+  const insets = useSafeAreaInsets();
   const { resetQuizz } = useQuizzLogic();
 
   const handlePress = () => {
@@ -30,7 +32,7 @@ const BackToHome = ({
   return (
     <Pressable
       onPress={handlePress}
-      style={[styles.button, style]}
+      style={[styles.button, { marginTop: insets.top + 8 }, style]}
       accessibilityRole="button"
       accessibilityLabel={label}
       hitSlop={8}>
@@ -51,7 +53,6 @@ const styles = StyleSheet.create({
     minHeight: 44,
     justifyContent: 'center',
     marginLeft: 16,
-    marginTop: 8,
   },
   label: {
     ...theme.fonts.secondary.extraSmall,

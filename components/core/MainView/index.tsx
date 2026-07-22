@@ -30,12 +30,17 @@ const MainView = ({
 
 const styles = StyleSheet.create({
   container: {
-    width: 320,
-    height: 360,
-    marginTop: 160,
+    width: '90%',
+    maxWidth: 320,
+    maxHeight: '100%',
+    flexShrink: 1,
     borderWidth: 1,
     borderRadius: 32,
     alignSelf: 'center',
+    paddingTop: 12,
+    paddingBottom: 16,
+    paddingHorizontal: 20,
+    justifyContent: 'space-between',
   },
   default: {
     ...theme.palette.primary,
@@ -44,21 +49,20 @@ const styles = StyleSheet.create({
     ...theme.palette.warning,
   },
   topContainer: {
-    flex: 1,
     width: '100%',
-    alignItems: 'stretch',
+    alignItems: 'center',
   },
   centerContainer: {
-    flex: 1,
     width: '100%',
     justifyContent: 'center',
     alignItems: 'stretch',
+    flexShrink: 1,
   },
   bottomContainer: {
-    flex: 1,
     width: '100%',
-    alignItems: 'stretch',
+    alignItems: 'center',
     justifyContent: 'center',
+    marginTop: 8,
   },
 });
 

@@ -118,8 +118,8 @@ const styles = StyleSheet.create({
   inputField: {
     width: '80%',
     alignSelf: 'center',
-    marginTop: 24,
-    marginBottom: 40,
+    marginTop: 16,
+    marginBottom: 16,
   },
   input: {
     width: '100%',

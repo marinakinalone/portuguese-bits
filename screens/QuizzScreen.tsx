@@ -4,11 +4,11 @@ import {
   ActivityIndicator,
   KeyboardAvoidingView,
   Platform,
-  ScrollView,
   StyleSheet,
   Text,
   View,
 } from 'react-native';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import CorrectAnswerFeedback from '@/components/AnswerFeedback/Correct';
 import WrongAnswerFeedback from '@/components/AnswerFeedback/Wrong';
 import BackToHome from '@/components/BackToHome';
@@ -24,6 +24,7 @@ import theme from '@/theme/defaultTheme';
 
 const QuizzScreen = () => {
   const router = useRouter();
+  const insets = useSafeAreaInsets();
   const {
     handleCheckAnswer,
     input,
@@ -88,28 +89,31 @@ const QuizzScreen = () => {
   };
 
   return (
-    <KeyboardAvoidingView
-      style={styles.screen}
-      behavior={Platform.OS === 'ios' ? 'padding' : undefined}>
-      <ScrollView
-        contentContainerStyle={styles.scrollContent}
-        keyboardShouldPersistTaps="always"
-        bounces={false}
-        showsVerticalScrollIndicator={false}>
-        <BackToHome />
-        <MainView
-          style={VIEW_STYLE.DEFAULT}
-          TopContainer={
-            <View style={styles.topContent}>
-              <ProgressCircles />
-              <ReviewBanner />
-            </View>
-          }
-          CenterContainer={<WordToTranslate />}
-          BottomContainer={renderBottomContainer()}
-        />
-      </ScrollView>
-    </KeyboardAvoidingView>
+    <View style={styles.screen}>
+      <BackToHome />
+      <KeyboardAvoidingView
+        style={styles.keyboardArea}
+        behavior={Platform.OS === 'ios' ? 'padding' : undefined}
+        keyboardVerticalOffset={0}>
+        <View
+          style={[
+            styles.cardSlot,
+            { paddingBottom: Math.max(insets.bottom, 8) },
+          ]}>
+          <MainView
+            style={VIEW_STYLE.DEFAULT}
+            TopContainer={
+              <View style={styles.topContent}>
+                <ProgressCircles />
+                <ReviewBanner />
+              </View>
+            }
+            CenterContainer={<WordToTranslate />}
+            BottomContainer={renderBottomContainer()}
+          />
+        </View>
+      </KeyboardAvoidingView>
+    </View>
   );
 };
 
@@ -118,11 +122,21 @@ const styles = StyleSheet.create({
     flex: 1,
     width: '100%',
     alignSelf: 'stretch',
+    overflow: 'hidden',
   },
-  scrollContent: {
-    flexGrow: 1,
+  keyboardArea: {
+    flex: 1,
     width: '100%',
-    alignItems: 'stretch',
+    overflow: 'hidden',
+  },
+  cardSlot: {
+    flex: 1,
+    width: '100%',
+    justifyContent: 'center',
+    alignItems: 'center',
+    paddingHorizontal: 16,
+    paddingVertical: 8,
+    overflow: 'hidden',
   },
   centered: {
     flex: 1,
