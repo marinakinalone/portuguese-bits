@@ -23,8 +23,8 @@ import { useQuizzLogic } from '@/providers/QuizzLogic';
 import theme from '@/theme/defaultTheme';
 
 /** Space left empty for the soft keyboard so the card never needs to move. */
-const KEYBOARD_RESERVE_RATIO = 0.4;
-const KEYBOARD_RESERVE_MIN = 280;
+const KEYBOARD_RESERVE_RATIO = 0.36;
+const KEYBOARD_RESERVE_MIN = 260;
 
 const QuizzScreen = () => {
   const router = useRouter();
@@ -129,10 +129,10 @@ const styles = StyleSheet.create({
   cardSlot: {
     flex: 1,
     width: '100%',
-    justifyContent: 'flex-start',
+    justifyContent: 'center',
     alignItems: 'center',
     paddingHorizontal: 16,
-    paddingTop: 12,
+    paddingTop: 8,
     overflow: 'hidden',
   },
   centered: {
