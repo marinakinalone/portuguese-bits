@@ -2,10 +2,10 @@ import { useRouter } from 'expo-router';
 import React from 'react';
 import {
   ActivityIndicator,
-  KeyboardAvoidingView,
   Platform,
   StyleSheet,
   Text,
+  useWindowDimensions,
   View,
 } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
@@ -22,9 +22,14 @@ import { PRIMARY_BUTTON_STYLE, VIEW_STYLE } from '@/constants';
 import { useQuizzLogic } from '@/providers/QuizzLogic';
 import theme from '@/theme/defaultTheme';
 
+/** Space left empty for the soft keyboard so the card never needs to move. */
+const KEYBOARD_RESERVE_RATIO = 0.4;
+const KEYBOARD_RESERVE_MIN = 280;
+
 const QuizzScreen = () => {
   const router = useRouter();
   const insets = useSafeAreaInsets();
+  const { height } = useWindowDimensions();
   const {
     handleCheckAnswer,
     input,
@@ -36,6 +41,12 @@ const QuizzScreen = () => {
     resetQuizz,
     wordsToTranslate,
   } = useQuizzLogic();
+
+  // Pin the card in the upper band; keyboard opens into the reserved bottom area.
+  const keyboardReserve =
+    Platform.OS === 'ios'
+      ? Math.max(Math.round(height * KEYBOARD_RESERVE_RATIO), KEYBOARD_RESERVE_MIN)
+      : Math.max(insets.bottom, 8);
 
   if (isFinishing || pendingSuccess) {
     return (
@@ -91,28 +102,19 @@ const QuizzScreen = () => {
   return (
     <View style={styles.screen}>
       <BackToHome />
-      <KeyboardAvoidingView
-        style={styles.keyboardArea}
-        behavior={Platform.OS === 'ios' ? 'padding' : undefined}
-        keyboardVerticalOffset={0}>
-        <View
-          style={[
-            styles.cardSlot,
-            { paddingBottom: Math.max(insets.bottom, 8) },
-          ]}>
-          <MainView
-            style={VIEW_STYLE.DEFAULT}
-            TopContainer={
-              <View style={styles.topContent}>
-                <ProgressCircles />
-                <ReviewBanner />
-              </View>
-            }
-            CenterContainer={<WordToTranslate />}
-            BottomContainer={renderBottomContainer()}
-          />
-        </View>
-      </KeyboardAvoidingView>
+      <View style={[styles.cardSlot, { paddingBottom: keyboardReserve }]}>
+        <MainView
+          style={VIEW_STYLE.DEFAULT}
+          TopContainer={
+            <View style={styles.topContent}>
+              <ProgressCircles />
+              <ReviewBanner />
+            </View>
+          }
+          CenterContainer={<WordToTranslate />}
+          BottomContainer={renderBottomContainer()}
+        />
+      </View>
     </View>
   );
 };
@@ -124,18 +126,13 @@ const styles = StyleSheet.create({
     alignSelf: 'stretch',
     overflow: 'hidden',
   },
-  keyboardArea: {
-    flex: 1,
-    width: '100%',
-    overflow: 'hidden',
-  },
   cardSlot: {
     flex: 1,
     width: '100%',
-    justifyContent: 'center',
+    justifyContent: 'flex-start',
     alignItems: 'center',
     paddingHorizontal: 16,
-    paddingVertical: 8,
+    paddingTop: 12,
     overflow: 'hidden',
   },
   centered: {
